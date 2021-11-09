@@ -13,6 +13,9 @@ public class Player implements Steppable {
     public String name;
     public String strategy;
     public int startPosition;
+    public int finish;
+    public int playerIndex;
+    public int order;
     public MersenneTwisterFast randomGenerator;
     //public int figureNumber = 1;
 
@@ -24,14 +27,16 @@ public class Player implements Steppable {
     public int finidhLineHeight = 1;
 
 
-    public Player(String name, String strategy, int startPosition, MersenneTwisterFast rng){
+    public Player(String name, String strategy, int startPosition, int finish, int playerIndex, MersenneTwisterFast rng){
         super();
         this.name = name;
         this.strategy = strategy;
         this.startPosition = startPosition;
+        this.finish = finish;
+        this.playerIndex = playerIndex;
         this.randomGenerator = rng;
+
         System.out.println("Hallo ich bin Spieler "+this.name);
-        firstRoll();
         createFigure(name);
     }
     public void step(SimState state){
@@ -45,11 +50,13 @@ public class Player implements Steppable {
         //Wenn keine Spielfigur vorhanden ist
         //Würfelwurf -> Veränderung des states, möglich hier?
     }
-    public void firstRoll(){
+    public int firstRoll(){
+        // Der Würfel wird das erste mal zum feststellen der Würfelreihenfolge 
         int eyes = this.randomGenerator.nextInt(6) + 1; 
-        System.out.println(eyes);
-    }
+        return eyes;
 
+    }
+    public void setOrdering(int order){this.order = order;}
     public void createFigure(String name){
         //Die Figuren sollen auf pro Spieler Basis existieren, ist das möglich? Vielleicht die Figuren als einfache Attribute
         //Oder die Figuren als Objekte in der Simulationsenvironment, wäre vermutlich sinnvoll

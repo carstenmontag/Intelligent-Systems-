@@ -49,17 +49,51 @@ public class PlayingGround extends SimState {
     public void createPlayers(){
         //Create the number of players specified in numPlayers
         //ToDo: Choose Strategy
-        //Erstellung der Agenten
+        //Erstellung der Agenten und Festlegung ihrer Reihenfolge
+        int[] RollsForOrder = new int[numPlayers];
+        // DIe Agenten werden erstellt und rollen 1x den Würfel um den ersten Spieler zu bestimmen
         for(int i = 0; i<this.numPlayers; i++){
-            players[i] = new Player(names[i], strategies[i], FigureSpawnLocations[i], rng);
+            players[i] = new Player(names[i], strategies[i], FigureSpawnLocations[i], FigureFinishes[i], i, rng);
+            RollsForOrder[i] = players[i].firstRoll();
+            System.out.println(RollsForOrder[i]);
         }
-        Schedule schedule = new Schedule();
-        schedule.scheduleOnce(players[0]);
+        // Der höchste Roll wird ermittelt
+        int highestRollPlayerIndex = getIndexOfHighestRoll(RollsForOrder);
+        players = getOrderedPlayers(highestRollPlayerIndex);
+        for(int i=0;i<players.length;i++){System.out.println("Spieler "+ players[i].name + " Originaler Index" + players[i].playerIndex + " Neuer Index " + i);}
+
+        //Schedule schedule = new Schedule();
+        //schedule.scheduleOnce(players[0]);
     }
-    
+    public Player[] getOrderedPlayers(int IndexHighestRoll){
+        // Höchster Roll --> erster Spieler, alle anderen werden der Sitzreihenfolge nach geordnet 
+        // z.B. 1. Index 3 --> 2. Index 0, 3. Index 1, 4. Index 2 
+        Player[] ordered = new Player[numPlayers];
+        Player HighestRollPlayer = players[IndexHighestRoll];
+        ordered[0] = HighestRollPlayer;
+        System.out.println(HighestRollPlayer.name);
+        int currentIndex = IndexHighestRoll;
+        int toFill = 1;
+        while(toFill<numPlayers){
+            if(currentIndex == numPlayers-1) nextIndex = 0;
+            else nextIndex = currentIndex++;
+            ordered[toFill] = players[currentIndex];
+            toFill++;
+        }
+        return ordered;
+    }
+    public int getIndexOfHighestRoll(int[] rolls){
+        if ( rolls == null || rolls.length == 0 ) return -1; // null or empty
+        int largest = 0;
+        for (int i = 1; i < rolls.length; i++ ){
+            if (rolls[i]>rolls[largest]) largest = i;
+        }
+        return largest; // position of the first largest found
+}
     private void getFinishLocations(){
         for(int i = 0; i<this.FigureSpawnLocations.length; i++){
-            this.FigureFinishes[i] = this.FigureSpawnLocations[i]-1;        
+            FigureFinishes[i] = FigureSpawnLocations[i]-1;    
+            
         }
     }
 
