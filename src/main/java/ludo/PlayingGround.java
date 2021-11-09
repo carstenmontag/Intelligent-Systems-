@@ -39,13 +39,20 @@ public class PlayingGround extends SimState {
     public void start(){
         super.start();
         field = new SparseGrid2D(fieldWidth, fieldHeight);
-        createPlayers();
         getFinishLocations();
+        createPlayers();
+        startSimulation();
 
         //Jetzt muss die Reihenfolge festgelegt werden
     }
 
-    
+    public void startSimulation(){
+        for(int i=0; i<numPlayers; i++){
+            schedule.scheduleRepeating(players[i],i, 1.0);
+        }
+        for(int i=0; i<numPlayers; i++) schedule.step(this);
+        
+    }
     public void createPlayers(){
         //Create the number of players specified in numPlayers
         //ToDo: Choose Strategy
@@ -53,17 +60,15 @@ public class PlayingGround extends SimState {
         int[] RollsForOrder = new int[numPlayers];
         // DIe Agenten werden erstellt und rollen 1x den Würfel um den ersten Spieler zu bestimmen
         for(int i = 0; i<this.numPlayers; i++){
-            players[i] = new Player(names[i], strategies[i], FigureSpawnLocations[i], FigureFinishes[i], i, rng);
-            RollsForOrder[i] = players[i].firstRoll();
+            players[i] = new Player(names[i], strategies[i], rng);
+            RollsForOrder[i] = players[i].throwDice();
             System.out.println(RollsForOrder[i]);
         }
         // Der höchste Roll wird ermittelt
         int highestRollPlayerIndex = getIndexOfHighestRoll(RollsForOrder);
         players = getOrderedPlayers(highestRollPlayerIndex);
         for(int i=0;i<players.length;i++){System.out.println("Spieler "+ players[i].name + " Originaler Index" + players[i].playerIndex + " Neuer Index " + i);}
-
-        //Schedule schedule = new Schedule();
-        //schedule.scheduleOnce(players[0]);
+        setOrderDependantVariables();
     }
     public Player[] getOrderedPlayers(int IndexHighestRoll){
         // Höchster Roll --> erster Spieler, alle anderen werden der Sitzreihenfolge nach geordnet 
@@ -75,12 +80,17 @@ public class PlayingGround extends SimState {
         int currentIndex = IndexHighestRoll;
         int toFill = 1;
         while(toFill<numPlayers){
-            if(currentIndex == numPlayers-1) nextIndex = 0;
-            else nextIndex = currentIndex++;
+            if(currentIndex == numPlayers-1) currentIndex = 0;
+            else currentIndex++;
             ordered[toFill] = players[currentIndex];
             toFill++;
         }
         return ordered;
+    }
+    public void setOrderDependantVariables(){
+        for(int i = 0; i<this.numPlayers; i++){
+            players[i].setOrderDependantVariables(FigureSpawnLocations[i],FigureFinishes[i],i);
+        }
     }
     public int getIndexOfHighestRoll(int[] rolls){
         if ( rolls == null || rolls.length == 0 ) return -1; // null or empty
