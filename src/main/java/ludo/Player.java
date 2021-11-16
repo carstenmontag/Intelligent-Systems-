@@ -8,7 +8,6 @@ import ec.util.*;
 public class Player implements Steppable {
     //Agent, jeder Agent soll 4 Spielfiguren haben (sind die Spielfiguren Objekte?)
     //Step, Würfeln, Figur bewegen, falls schon eine Figur da ist Entscheidung treffen, Position der Figur aktualisieren und repeat
-    
     public int diceNumber;
     public String name;
     public String strategy;
@@ -34,40 +33,53 @@ public class Player implements Steppable {
         this.strategy = strategy;
         this.randomGenerator = rng;
         this.finishLine = new SparseGrid2D(finishLineWidth,finishLineHeight);
-        System.out.println("Hallo ich bin Spieler "+this.name);
     }
     public void step(SimState state){ 
         PlayingGround gameboard = (PlayingGround)state;
         tempBoard = gameboard.field;
-        System.out.println("Step "+ name + gameboard.schedule.getSteps()); 
-
         //Mit state bekommt der Agent den aktuellen Status
         //Hier sollen die Aktionen durchgeführt werden
         int eyesThisMove = throwDice();
-        if(eyesThisMove == 6){
-            movePieceToField();
+        Move[] PossibleMoves = getPossibleMoves(eyesThisMove);
+        if (PossibleMoves.length>0) {
+            Move move = determineMove(PossibleMoves);
+            move.execute();
         }
-        System.out.println(eyesThisMove);
+        else {return;}
+        System.out.println("Possible moves : " + PossibleMoves.length);
+        // System.out.println("Player "+ playerIndex);
+        // System.out.println("Roll: " +eyesThisMove);
+        // for(int i = 0; i<locs.length; i++){
+        //     System.out.println("Location "+ i+ " "+locs[i]);
+        // }
+        // System.out.println("pieces set " + PiecesSet());
         tempBoard = null;
         //Wenn keine Spielfigur vorhanden ist
         //Würfelwurf -> Veränderung des states, möglich hier?
     }
-    public int getLastPieceLAtStart(){
-        int left = 3;
-        for(int i = 0;i<=AtStartPieces.length-1;i++){
-            if(AtStartPieces==null) {left-= 1;}
+    // mögliche Züge werden in der Form int[gamepiece index, new_position] dargestellt
+    public Move[] getPossibleMoves(int eyesThisMove){
+        int possible_counter = 0;
+        Move[] moves = new Move[4];
+        for(int i = 0; i<AtStartPieces.length; i++){
+            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, tempBoard, finishLine);
+            if (move.possible){possible_counter++;}
+            moves[i] = move;
         }
-        return left;
-    }    
-    public void movePieceToField(){
-        GamePiece tmp = AtStartPieces[getLastPieceLAtStart()];
-        tempBoard.setObjectLocation(tmp, new Int2D(start,0));
-        AtStartPieces[getLastPieceLAtStart()].isset = true;
-        tmp.positionx = tmp.start;
-        System.out.println(tempBoard.getAllObjects().contains(tmp) + " " + tmp.positionx);
-
+        Move[] possibleMoves = new Move[possible_counter];
+        int nextIndex = 0;
+        for(int i = 0;i<moves.length;i++){
+            if (moves[i].possible){
+                possibleMoves[nextIndex] = moves[i];
+                nextIndex++;
+            }
+        }
+        return possibleMoves;
     }
-    
+
+    public Move determineMove(Move[] moves){
+        return moves[0];
+    }
     public void setOrderDependantVariables(int start, int finish, int playerIndex){
         this.start = start;
         this.finish = finish;
@@ -79,24 +91,13 @@ public class Player implements Steppable {
         //Die Figuren sollen auf pro Spieler Basis existieren, ist das möglich? Vielleicht die Figuren als einfache Attribute
         //Oder die Figuren als Objekte in der Simulationsenvironment, wäre vermutlich sinnvoll
         for(int i = 0;i<=AtStartPieces.length-1;i++){
-            AtStartPieces[i] = new GamePiece(playerIndex,start,finish);
+            AtStartPieces[i] = new GamePiece(playerIndex,start,finish,i);
         }
     }
-
     public int throwDice(){
         //Gibt eine Zahl zwischen 1 und 6 für den Würfelwurf aus, besser als Javas Random
-        int eyes = this.randomGenerator.nextInt(6) + 1; 
+        int eyes = randomGenerator.nextInt(6) + 1; 
         return eyes;
     }
 
-    public void movePieceOnField(GamePiece figure, int i){
-        //move figure 
-
-        //Figur soll ggf. auf die Finishline transfertiert werden und vom originalen Brett gelöscht
-
-    }
-
-
-
-    
 }

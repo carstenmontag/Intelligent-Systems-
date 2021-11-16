@@ -15,7 +15,7 @@ public class PlayingGround extends SimState {
     //Spielerzahl, sollte über die Konsole verändert werden können
     public long seed;
     public int numPlayers = 4;
-    public int test = 0;
+    public int test_steps = 2;
     //Strategie eines Spielers, sollte über die Konsole verändert werden können
     //random = Alle Aktionen zufällig
     //aggressive = Es sollten nur wenige Figuren im Spiel sein, diese sollten sich schnell bewegen um andere Spiele einzuholen und rauszuwerfen
@@ -42,16 +42,16 @@ public class PlayingGround extends SimState {
         getFinishLocations();
         createPlayers();
         startSimulation();
-
-        //Jetzt muss die Reihenfolge festgelegt werden
     }
 
     public void startSimulation(){
+        // Queue the Agents in a repeating schedule
         for(int i=0; i<numPlayers; i++){
             schedule.scheduleRepeating(players[i],i, 1.0);
         }
-        for(int i=0; i<numPlayers; i++) schedule.step(this);
-        
+        // Apply the schedule until the game is over
+        for(int i=0; i<test_steps; i++) schedule.step(this);
+            System.out.println(field.getAllObjects().size());
     }
     public void createPlayers(){
         //Create the number of players specified in numPlayers
@@ -106,7 +106,6 @@ public class PlayingGround extends SimState {
             
         }
     }
-
     public static void main(String[] args){
         long seed = System.currentTimeMillis();
         PlayingGround test = new PlayingGround(seed);
