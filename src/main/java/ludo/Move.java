@@ -28,19 +28,22 @@ public Move(GamePiece piece, int roll, GamePiece[] start_field, SparseGrid2D fie
 }
 
 public int determineTarget(){
+    
     if (originx == -1 && roll != 6){return -1;}
     if (originx == -1 && roll == 6){return piece.start;}
     else if (originx +roll >= piece.finish){
-    
+        return originx +roll;
+        // return field_copy.getWidth() + piece.finish
     }
     else {
-        targetx = originx +roll;
+        int target = originx +roll;
+        System.out.println("target before Correction" + targetx);
         // overshoots field 52 with index 51
-        if (targetx>=field_copy.getWidth()){
-            targetx = field_copy.getWidth() -targetx - 1 ;
+        if (target>=field_copy.getWidth()){
+            target = target - field_copy.getWidth();
         }
+    return target;
     }
-    return targetx;
 }
 public boolean movePossible(){
     System.out.println(originx + " Roll " + roll +"-->" + targetx);
@@ -50,30 +53,35 @@ public boolean movePossible(){
     if (ObjectsAtTarget == null) {return true;}
     GamePiece PieceAtTarget = (GamePiece) ObjectsAtTarget.get(0);
     
-    if (checkTargetFriendly(PieceAtTarget) == true){return true;}
-    else{
-        if (overshoots() && canFinish()){ return true;}
-        else{return false;}
-    }
+    if (checkTargetFriendly(PieceAtTarget) == true){return false;}
+    else{return true;}
+    //if (overshoots() && canFinish()){ return true;}
+    //else{return false;}
 }
+
 
 public boolean checkTargetFriendly(GamePiece atTarget){
     if (piece.ownerIndex == atTarget.ownerIndex) {return true;}
-    else {return false;}
+    return false;
 }
 public boolean canFinish(){
     return false;
 }
-public boolean overshoots(){
+public boolean overshoots(){ // Formel falsch
     if (targetx>piece.finish) {return true;} 
     else {return false;}
 }
 
-public void execute(){
+public void execute() throws ArithmeticException{
 // insert into field move
+if (targetx == -1) {throw new ArithmeticException("Targetx is " + targetx + " this is not a valid move.");}
 if (targetx == piece.start){
+    System.out.println("Figure "+ piece.PieceIndex+ " has been moved.");
+    System.out.println("old pos " + piece.positionx);
     insertToField();
-}
+    System.out.println("new pos " +piece.positionx);
+    
+}   
 // insert and beat
 // beating move
 // finish Piece and set to finish field

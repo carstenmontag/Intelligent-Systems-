@@ -2,7 +2,6 @@ package ludo;
 
 import sim.engine.*;
 import sim.field.grid.SparseGrid2D;
-import sim.util.Int2D;
 import ec.util.*;
 
 public class Player implements Steppable {
@@ -35,29 +34,25 @@ public class Player implements Steppable {
         this.finishLine = new SparseGrid2D(finishLineWidth,finishLineHeight);
     }
     public void step(SimState state){ 
+        System.out.println("Turn Player " + playerIndex);
         PlayingGround gameboard = (PlayingGround)state;
         tempBoard = gameboard.field;
         //Mit state bekommt der Agent den aktuellen Status
         //Hier sollen die Aktionen durchgeführt werden
         int eyesThisMove = throwDice();
         Move[] PossibleMoves = getPossibleMoves(eyesThisMove);
+        System.out.println("Possible moves : " + PossibleMoves.length);
         if (PossibleMoves.length>0) {
             Move move = determineMove(PossibleMoves);
             move.execute();
         }
         else {return;}
-        System.out.println("Possible moves : " + PossibleMoves.length);
-        // System.out.println("Player "+ playerIndex);
-        // System.out.println("Roll: " +eyesThisMove);
-        // for(int i = 0; i<locs.length; i++){
-        //     System.out.println("Location "+ i+ " "+locs[i]);
-        // }
-        // System.out.println("pieces set " + PiecesSet());
+       
         tempBoard = null;
-        //Wenn keine Spielfigur vorhanden ist
-        //Würfelwurf -> Veränderung des states, möglich hier?
     }
-    // mögliche Züge werden in der Form int[gamepiece index, new_position] dargestellt
+    // mögliche Züge werden in der Form eines Objektes dargestellt
+    // für jeden Move wird errechnet ob er durch die Spielrestriktionen mgl ist
+    // sind mehrere Moves mgl so wird nach der angegebenen Strategie entschieden --> ein Move bekommt Attribute wie "beat" oder "keep up", hiernach kann entschieden werden
     public Move[] getPossibleMoves(int eyesThisMove){
         int possible_counter = 0;
         Move[] moves = new Move[4];
@@ -78,7 +73,9 @@ public class Player implements Steppable {
     }
 
     public Move determineMove(Move[] moves){
-        return moves[0];
+        // random decision
+        int rndint = randomGenerator.nextInt(moves.length);
+        return moves[rndint];
     }
     public void setOrderDependantVariables(int start, int finish, int playerIndex){
         this.start = start;

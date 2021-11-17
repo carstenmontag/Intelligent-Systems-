@@ -11,6 +11,7 @@ public class GUI extends GUIState {
     //Benutzerkonsole
 
     public GUI(){
+        
         super(new PlayingGround(System.currentTimeMillis()));
     }
 
