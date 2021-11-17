@@ -28,8 +28,9 @@ public class PlayingGround extends SimState {
 
     // Spielerparameter werden initialisert, strategies und name  optional später über UI konfigurierbar 
     public String[] strategies = {"random", "aggressive", "peaceful","test"};
-    public int[] FigureSpawnLocations = {1,14,27,40};
-    public int[] FigureFinishes = new int[4];
+    
+    public int[] FigureSpawnLocations = {2,15,28,41};
+    public int[] FigureFinishes = {0,13,26,39};
     public String[] names = {"Max", "Peter", "Hans", "Heinrich"};
     public Player[] players = new Player[4];
     public MersenneTwisterFast rng;
@@ -39,7 +40,6 @@ public class PlayingGround extends SimState {
     public void start(){
         super.start();
         field = new SparseGrid2D(fieldWidth, fieldHeight);
-        getFinishLocations();
         createPlayers();
         startSimulation();
     }
@@ -51,7 +51,7 @@ public class PlayingGround extends SimState {
         }
         // Apply the schedule until the game is over
         for(int i=0; i<test_steps; i++) schedule.step(this);
-            System.out.println(field.getAllObjects().size());
+            System.out.println("Figures on the field :" + field.getAllObjects().size());
     }
     public void createPlayers(){
         //Create the number of players specified in numPlayers
@@ -100,12 +100,6 @@ public class PlayingGround extends SimState {
         }
         return largest; // position of the first largest found
 }
-    private void getFinishLocations(){
-        for(int i = 0; i<this.FigureSpawnLocations.length; i++){
-            FigureFinishes[i] = FigureSpawnLocations[i]-1;    
-            
-        }
-    }
     public static void main(String[] args){
         long seed = System.currentTimeMillis();
         PlayingGround test = new PlayingGround(seed);
