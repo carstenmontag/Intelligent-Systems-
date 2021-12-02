@@ -31,6 +31,7 @@ public int determineTarget(){
     
     if (originx == -1 && roll != 6){return -1;}
     if (originx == -1 && roll == 6){return piece.start;}
+    // finish logic 
     else if (originx +roll >= piece.finish){
         return originx +roll;
         // return field_copy.getWidth() + piece.finish
@@ -50,7 +51,9 @@ public boolean movePossible(){
     if (targetx == -1){return false;}
     // case figure at start
     Bag ObjectsAtTarget = (Bag)field_copy.getObjectsAtLocation(targetx, 0);
+    // no figure at target
     if (ObjectsAtTarget == null) {return true;}
+    // figure at target
     GamePiece PieceAtTarget = (GamePiece) ObjectsAtTarget.get(0);
     
     if (checkTargetFriendly(PieceAtTarget) == true){return false;}
@@ -67,26 +70,38 @@ public boolean checkTargetFriendly(GamePiece atTarget){
 public boolean canFinish(){
     return false;
 }
+public boolean canBeat(){
+    return true;
+}
 public boolean overshoots(){ // Formel falsch
     if (targetx>piece.finish) {return true;} 
     else {return false;}
 }
 
 public void execute() throws ArithmeticException{
-// insert into field move
+
 if (targetx == -1) {throw new ArithmeticException("Targetx is " + targetx + " this is not a valid move.");}
-if (targetx == piece.start){
+boolean can_beat = canBeat();
+// insert into field move // no beat
+if (targetx == piece.start && !can_beat){
     System.out.println("Figure "+ piece.PieceIndex+ " has been moved.");
     System.out.println("old pos " + piece.positionx);
     insertToField();
     System.out.println("new pos " +piece.positionx);
     
-}   
-// insert and beat
-// beating move
+}  
+// insert and beat 
+else if(targetx == piece.start && can_beat){
+
+}
+// regular move
+
+// regular beating move
+
 // finish Piece and set to finish field
-// regular move when moving on field without beating
-else {}
+
+// move on finish field
+
 
 
 }

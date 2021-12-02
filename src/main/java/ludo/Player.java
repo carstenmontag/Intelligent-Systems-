@@ -73,7 +73,11 @@ public class Player implements Steppable {
     }
 
     public Move determineMove(Move[] moves){
+        //Strategien implementieren
         // random decision
+        switch (strategy){
+        case "random":  System.out.println("test");
+        }
         int rndint = randomGenerator.nextInt(moves.length);
         return moves[rndint];
     }

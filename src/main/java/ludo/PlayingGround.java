@@ -27,7 +27,7 @@ public class PlayingGround extends SimState {
     public int fieldHeight = 1;
 
     // Spielerparameter werden initialisert, strategies und name  optional später über UI konfigurierbar 
-    public String[] strategies = {"random", "aggressive", "peaceful","test"};
+    public String[] strategies = {"random","random", "random","random"};
     
     public int[] FigureSpawnLocations = {2,15,28,41};
     public int[] FigureFinishes = {0,13,26,39};
