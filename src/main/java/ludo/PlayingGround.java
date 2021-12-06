@@ -42,7 +42,7 @@ public class PlayingGround extends SimState {
         //blue
         {new Int2D(11,11),new Int2D(12,11),new Int2D(12,12),new Int2D(11,12)},
         //yellow
-        {new Int2D(11,11),new Int2D(12,11),new Int2D(12,12),new Int2D(11,12)}
+        {new Int2D(2,11),new Int2D(3,11),new Int2D(3,12),new Int2D(2,12)}
     };
     public Int2D[][] two_d_finish_line = {
         //green
