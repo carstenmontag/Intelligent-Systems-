@@ -70,7 +70,7 @@ public class GUI extends GUIState {
 
     public void init(Controller c) {
         super.init(c);
-        display = new Display2D(724,724,this);
+        display = new Display2D(720,720,this);
         display.setClipping(false);
 
         displayFrame = display.createFrame();
