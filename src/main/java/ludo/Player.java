@@ -20,6 +20,7 @@ public class Player implements Steppable {
     public MersenneTwisterFast randomGenerator;
     public GamePiece[] AtStartPieces = new GamePiece[4];
     public SparseGrid2D tempBoard;
+    public SparseGrid2D finishLine;
     //public int figureNumber = 1;
 
     //Die Zielline, SparseGrid2D damit mehrere Objekte (Spielfiguren?) darauf gespeichert werden können.
@@ -58,7 +59,7 @@ public class Player implements Steppable {
         int possible_counter = 0;
         Move[] moves = new Move[4];
         for(int i = 0; i<AtStartPieces.length; i++){
-            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, tempBoard);
+            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, tempBoard, finishLine);
             if (move.possible){possible_counter++;}
             moves[i] = move;
         }

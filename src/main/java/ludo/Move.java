@@ -13,7 +13,7 @@ public class Move {
     public int targetx;
     public boolean possible;
     public boolean doesBeat;
-    
+    public SparseGrid2D finish_field;
 
 public Move(GamePiece piece, int roll, GamePiece[] start_field, SparseGrid2D field_copy, SparseGrid2D finish_field){
     this.piece = piece;
