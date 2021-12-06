@@ -2,6 +2,7 @@ package ludo;
 
 import sim.engine.*;
 import sim.field.grid.SparseGrid2D;
+import sim.util.Int2D;
 import ec.util.*;
 
 public class Player implements Steppable {
@@ -10,13 +11,15 @@ public class Player implements Steppable {
     public int diceNumber;
     public String name;
     public String strategy;
+    public Int2D[] two_d_spawns;
+    public Int2D[] two_d_finish_line;
     public int start;
     public int finish;
     public int playerIndex;
     public int order;
     public MersenneTwisterFast randomGenerator;
     public GamePiece[] AtStartPieces = new GamePiece[4];
-    SparseGrid2D tempBoard;
+    public SparseGrid2D tempBoard;
     //public int figureNumber = 1;
 
     //Die Zielline, SparseGrid2D damit mehrere Objekte (Spielfiguren?) darauf gespeichert werden können.
@@ -24,14 +27,14 @@ public class Player implements Steppable {
     
     public int finishLineWidth = 4;
     public int finishLineHeight = 1;
-    public SparseGrid2D finishLine ;
 
-    public Player(String name, String strategy, MersenneTwisterFast rng){
+    public Player(String name, String strategy, MersenneTwisterFast rng, SparseGrid2D tempBoard){
         super();
         this.name = name;
         this.strategy = strategy;
         this.randomGenerator = rng;
-        this.finishLine = new SparseGrid2D(finishLineWidth,finishLineHeight);
+        this.tempBoard = tempBoard;
+        
     }
     public void step(SimState state){ 
         System.out.println("Turn Player " + playerIndex);
@@ -47,8 +50,6 @@ public class Player implements Steppable {
             move.execute();
         }
         else {return;}
-       
-        tempBoard = null;
     }
     // mögliche Züge werden in der Form eines Objektes dargestellt
     // für jeden Move wird errechnet ob er durch die Spielrestriktionen mgl ist
@@ -57,7 +58,7 @@ public class Player implements Steppable {
         int possible_counter = 0;
         Move[] moves = new Move[4];
         for(int i = 0; i<AtStartPieces.length; i++){
-            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, tempBoard, finishLine);
+            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, tempBoard);
             if (move.possible){possible_counter++;}
             moves[i] = move;
         }
@@ -81,10 +82,12 @@ public class Player implements Steppable {
         int rndint = randomGenerator.nextInt(moves.length);
         return moves[rndint];
     }
-    public void setOrderDependantVariables(int start, int finish, int playerIndex){
+    public void setOrderDependantVariables(int start, int finish, Int2D[] spawns, Int2D[] finish_line, int playerIndex){
         this.start = start;
         this.finish = finish;
         this.playerIndex = playerIndex;
+        this.two_d_spawns = spawns;
+        this.two_d_finish_line = finish_line; 
         System.out.println("Variables for Player "+name+" set.");
         createFigures();    
     }
@@ -92,7 +95,8 @@ public class Player implements Steppable {
         //Die Figuren sollen auf pro Spieler Basis existieren, ist das möglich? Vielleicht die Figuren als einfache Attribute
         //Oder die Figuren als Objekte in der Simulationsenvironment, wäre vermutlich sinnvoll
         for(int i = 0;i<=AtStartPieces.length-1;i++){
-            AtStartPieces[i] = new GamePiece(playerIndex,start,finish,i);
+            AtStartPieces[i] = new GamePiece(playerIndex,start,finish,i, two_d_spawns[i],tempBoard);
+            AtStartPieces[i].set_to_spawn();
         }
     }
     public int throwDice(){

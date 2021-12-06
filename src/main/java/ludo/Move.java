@@ -7,7 +7,6 @@ import sim.util.Bag;
 public class Move {
     public GamePiece piece;
     public GamePiece[] start_field;
-    public SparseGrid2D finish_field;
     public SparseGrid2D field_copy; 
     public int roll;
     public int originx;
@@ -48,8 +47,9 @@ public int determineTarget(){
 }
 public boolean movePossible(){
     System.out.println(originx + " Roll " + roll +"-->" + targetx);
-    if (targetx == -1){return false;}
-    // case figure at start
+     // case figure at start + target start
+    if (targetx == -1 ){return false;}
+    
     Bag ObjectsAtTarget = (Bag)field_copy.getObjectsAtLocation(targetx, 0);
     // no figure at target
     if (ObjectsAtTarget == null) {return true;}
@@ -79,7 +79,7 @@ public boolean overshoots(){ // Formel falsch
 }
 
 public void execute() throws ArithmeticException{
-
+/*
 if (targetx == -1) {throw new ArithmeticException("Targetx is " + targetx + " this is not a valid move.");}
 boolean can_beat = canBeat();
 // insert into field move // no beat
@@ -102,7 +102,7 @@ else if(targetx == piece.start && can_beat){
 
 // move on finish field
 
-
+*/
 
 }
 public void insertToField(){

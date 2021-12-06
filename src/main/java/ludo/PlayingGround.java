@@ -3,6 +3,7 @@ package ludo;
 import ec.util.MersenneTwisterFast;
 import sim.engine.*;
 import sim.field.grid.SparseGrid2D;
+import sim.util.Int2D;
 
 public class PlayingGround extends SimState {
 //Spielfeld / Environment / Simulation
@@ -23,14 +24,48 @@ public class PlayingGround extends SimState {
 
     //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
     public SparseGrid2D field;
-    public int fieldWidth = 6*8+4;
-    public int fieldHeight = 1;
+    public int fieldWidth = 15;
+    public int fieldHeight = 15;
 
     // Spielerparameter werden initialisert, strategies und name  optional später über UI konfigurierbar 
     public String[] strategies = {"random","random", "random","random"};
-    
-    public int[] FigureSpawnLocations = {2,15,28,41};
+    // Start wenn eine 6 gewürfelt wurde, sowohl als 2d, als auch 1d Punkt
+    public int[] FigureStarts = {2,15,28,41};
     public int[] FigureFinishes = {0,13,26,39};
+    // home Feld, hier starten alle Figuren beim initialisieren
+    public Int2D[][] two_d_spawns = {
+        //Startpositionen der einzelnen Figuren auf dem 2D Feld 
+        //green
+        {new Int2D(2,2),new Int2D(3,2),new Int2D(3,3),new Int2D(2,3),},
+        //red
+        {new Int2D(11,2),new Int2D(12,2),new Int2D(12,3),new Int2D(11,3)},
+        //blue
+        {new Int2D(11,11),new Int2D(12,11),new Int2D(12,12),new Int2D(11,12)},
+        //yellow
+        {new Int2D(11,11),new Int2D(12,11),new Int2D(12,12),new Int2D(11,12)}
+    };
+    public Int2D[][] two_d_finish_line = {
+        //green
+        {new Int2D(1,7),new Int2D(2,7),new Int2D(3,7),new Int2D(4,7)},
+        //red
+        {new Int2D(7,1),new Int2D(7,2),new Int2D(7,3),new Int2D(7,4)},
+        //blue
+        {new Int2D(13,7),new Int2D(12,7),new Int2D(11,7),new Int2D(10,7)},
+         //yellow 
+        {new Int2D(7,13),new Int2D(7,12),new Int2D(7,11),new Int2D(7,10)}
+    };
+
+    public Int2D[] locations = {
+        new Int2D(0,7), new Int2D(0,6), new Int2D(1,6), new Int2D(2,6), new Int2D(3,6), new Int2D(4,6), new Int2D(5,6),
+        new Int2D(6,5), new Int2D(6,4), new Int2D(6,3), new Int2D(6,2), new Int2D(6,1), new Int2D(6,0), new Int2D(7,0),
+        new Int2D(8,0), new Int2D(8,1), new Int2D(8,2), new Int2D(8,3), new Int2D(8,4), new Int2D(8,5), new Int2D(9,6),
+        new Int2D(10,6), new Int2D(11,6), new Int2D(12,6), new Int2D(13,6), new Int2D(14,6), new Int2D(14,7), new Int2D(14,8),
+        new Int2D(13,8), new Int2D(12,8), new Int2D(11,8), new Int2D(10,8), new Int2D(9,8), new Int2D(8,9), new Int2D(8,10),
+        new Int2D(8,11), new Int2D(8,12), new Int2D(8,13), new Int2D(8,14), new Int2D(7,14), new Int2D(6,14), new Int2D(6,13),
+        new Int2D(6,12), new Int2D(6,11), new Int2D(6,10), new Int2D(6,9), new Int2D(5,8), new Int2D(4,8), new Int2D(3,8),
+        new Int2D(2,8), new Int2D(1,8), new Int2D(0,8)};
+
+
     public String[] names = {"Max", "Peter", "Hans", "Heinrich"};
     public Player[] players = new Player[4];
     public MersenneTwisterFast rng;
@@ -60,7 +95,7 @@ public class PlayingGround extends SimState {
         int[] RollsForOrder = new int[numPlayers];
         // DIe Agenten werden erstellt und rollen 1x den Würfel um den ersten Spieler zu bestimmen
         for(int i = 0; i<this.numPlayers; i++){
-            players[i] = new Player(names[i], strategies[i], rng);
+            players[i] = new Player(names[i], strategies[i], rng, field);
             RollsForOrder[i] = players[i].throwDice();
             System.out.println(RollsForOrder[i]);
         }
@@ -89,7 +124,7 @@ public class PlayingGround extends SimState {
     }
     public void setOrderDependantVariables(){
         for(int i = 0; i<this.numPlayers; i++){
-            players[i].setOrderDependantVariables(FigureSpawnLocations[i],FigureFinishes[i],i);
+            players[i].setOrderDependantVariables(FigureStarts[i],FigureFinishes[i],two_d_spawns[i], two_d_finish_line[i],i );
         }
     }
     public int getIndexOfHighestRoll(int[] rolls){
