@@ -71,7 +71,7 @@ public boolean canFinish(){
     return false;
 }
 public boolean canBeat(){
-    return true;
+    return false;
 }
 public boolean overshoots(){ // Formel falsch
     if (targetx>piece.finish) {return true;} 
@@ -79,21 +79,25 @@ public boolean overshoots(){ // Formel falsch
 }
 
 public void execute() throws ArithmeticException{
-/*
-if (targetx == -1) {throw new ArithmeticException("Targetx is " + targetx + " this is not a valid move.");}
-boolean can_beat = canBeat();
-// insert into field move // no beat
-if (targetx == piece.start && !can_beat){
-    System.out.println("Figure "+ piece.PieceIndex+ " has been moved.");
-    System.out.println("old pos " + piece.positionx);
-    insertToField();
-    System.out.println("new pos " +piece.positionx);
-    
-}  
-// insert and beat 
-else if(targetx == piece.start && can_beat){
 
-}
+    System.out.println("Execute logic : ");
+    if (targetx == -1) {throw new ArithmeticException("Targetx is " + targetx + " this is not a valid move.");}
+    boolean can_beat = canBeat();
+    // insert into field move // no beat
+    System.out.println(""+ targetx + piece.start + can_beat);
+    if (targetx == piece.start && !can_beat){
+        System.out.println("Figure "+ piece.PieceIndex+ " has been moved.");
+        System.out.println("old pos " + piece.positionx);
+        insertToField();
+        System.out.println("new pos " +piece.positionx);
+
+    }  
+    // insert and beat 
+    //else if(targetx == piece.start && can_beat){
+    
+    else {
+        piece.set_to_random_loc();
+    }
 // regular move
 
 // regular beating move
@@ -102,13 +106,12 @@ else if(targetx == piece.start && can_beat){
 
 // move on finish field
 
-*/
-
 }
 public void insertToField(){
-    field_copy.setObjectLocation(piece, new Int2D(targetx,0));
+    piece.set_to_start();
     piece.isset = true;
-    piece.positionx = targetx;
+    
+
 }
 //beatMove
 

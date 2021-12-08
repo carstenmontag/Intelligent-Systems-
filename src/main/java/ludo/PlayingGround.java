@@ -6,13 +6,6 @@ import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
 
 public class PlayingGround extends SimState {
-//Spielfeld / Environment / Simulation
-    public PlayingGround(long seed) {
-		super(seed);
-        this.seed = seed;	
-        this.rng = new MersenneTwisterFast(this.seed);
-	}
-
     //Spielerzahl, sollte über die Konsole verändert werden können
     public long seed;
     public int numPlayers = 4;
@@ -23,6 +16,7 @@ public class PlayingGround extends SimState {
     //peaceful = Die Figuren werden gleichmäßig verteilt
 
     //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
+    public boolean game_over = false;
     public SparseGrid2D field;
     public int fieldWidth = 15;
     public int fieldHeight = 15;
@@ -55,7 +49,7 @@ public class PlayingGround extends SimState {
         {new Int2D(7,13),new Int2D(7,12),new Int2D(7,11),new Int2D(7,10)}
     };
 
-    public Int2D[] locations = {
+    public static Int2D[] locations = {
         new Int2D(0,7), new Int2D(0,6), new Int2D(1,6), new Int2D(2,6), new Int2D(3,6), new Int2D(4,6), new Int2D(5,6),
         new Int2D(6,5), new Int2D(6,4), new Int2D(6,3), new Int2D(6,2), new Int2D(6,1), new Int2D(6,0), new Int2D(7,0),
         new Int2D(8,0), new Int2D(8,1), new Int2D(8,2), new Int2D(8,3), new Int2D(8,4), new Int2D(8,5), new Int2D(9,6),
@@ -70,23 +64,37 @@ public class PlayingGround extends SimState {
     public Player[] players = new Player[4];
     public MersenneTwisterFast rng;
     //Das Spielfeld soll wie ein einfaches Array sein, die Spieler spawnen die Figuren an fixen stellen. Falls ein Spieler am Ursprungspunkt-2 ist kommt er auf ein neues kleines array dass die Ziellinie abbildet
+//Spielfeld / Environment / Simulation
+    public PlayingGround(long seed) {
+		super(seed);
+        this.seed = seed;	
+        this.rng = new MersenneTwisterFast(this.seed);
+        field = new SparseGrid2D(fieldWidth, fieldHeight);
+        createPlayers();
+	}
+
+   
     
 
     public void start(){
         super.start();
-        field = new SparseGrid2D(fieldWidth, fieldHeight);
-        createPlayers();
-        startSimulation();
+        System.out.println("Starting Sim");
+        //startSimulation();
     }
 
     public void startSimulation(){
+        
         // Queue the Agents in a repeating schedule
         for(int i=0; i<numPlayers; i++){
             schedule.scheduleRepeating(players[i],i, 1.0);
         }
         // Apply the schedule until the game is over
-        for(int i=0; i<test_steps; i++) schedule.step(this);
+        for(int i=0; i<test_steps; i++) {
+        //schedule.step(this);
+        //System.out.println("Step" + i);
+        }
             System.out.println("Figures on the field :" + field.getAllObjects().size());
+            
     }
     public void createPlayers(){
         //Create the number of players specified in numPlayers

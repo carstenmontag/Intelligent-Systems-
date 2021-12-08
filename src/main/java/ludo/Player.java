@@ -48,6 +48,7 @@ public class Player implements Steppable {
         System.out.println("Possible moves : " + PossibleMoves.length);
         if (PossibleMoves.length>0) {
             Move move = determineMove(PossibleMoves);
+            System.out.println("Move" + move.originx + " --> " + move.targetx );
             move.execute();
         }
         else {return;}
@@ -77,9 +78,11 @@ public class Player implements Steppable {
     public Move determineMove(Move[] moves){
         //Strategien implementieren
         // random decision
-        switch (strategy){
+       
+       /* switch (strategy){
         case "random":  System.out.println("test");
         }
+        */
         int rndint = randomGenerator.nextInt(moves.length);
         return moves[rndint];
     }
