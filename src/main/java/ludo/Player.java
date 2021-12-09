@@ -21,6 +21,7 @@ public class Player implements Steppable {
     public GamePiece[] AtStartPieces = new GamePiece[4];
     public SparseGrid2D tempBoard;
     public SparseGrid2D finishLine;
+    public int win;
     //public int figureNumber = 1;
 
     //Die Zielline, SparseGrid2D damit mehrere Objekte (Spielfiguren?) darauf gespeichert werden können.
@@ -35,6 +36,7 @@ public class Player implements Steppable {
         this.strategy = strategy;
         this.randomGenerator = rng;
         this.tempBoard = tempBoard;
+        this.win = 0;
         
     }
     public void step(SimState state){ 

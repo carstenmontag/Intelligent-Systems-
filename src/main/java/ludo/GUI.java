@@ -2,6 +2,7 @@ package ludo;
 
 import sim.engine.*;
 import sim.display.*;
+import sim.portrayal.Inspector;
 import sim.portrayal.SimplePortrayal2D;
 import sim.portrayal.grid.*;
 import java.awt.*;
@@ -10,7 +11,6 @@ import javax.swing.*;
 
 import sim.portrayal.simple.FacetedPortrayal2D;
 import sim.portrayal.simple.ImagePortrayal2D;
-import sim.portrayal.simple.OvalPortrayal2D;
 
 public class GUI extends GUIState {
     //Benutzerkonsole
@@ -36,8 +36,17 @@ public class GUI extends GUIState {
     public GUI(SimState state){
         super(state);
     }
+
     public static String getName(){
         return "Ludo";
+    }
+
+    public Object getSimulationInspectedObject() {return state; }
+
+    public Inspector getInspector() {
+        Inspector i = super.getInspector();
+        i.setVolatile(true);
+        return i;
     }
 
     public void start() {
@@ -115,6 +124,7 @@ public class GUI extends GUIState {
         c.registerFrame(displayFrame);
         displayFrame.setVisible(true);
         display.attach(boardPortrayal, "FieldBoard" );
+        display.attach( new GameOverlay(this), "GameOverlay");
     }
 
     public void quit() {

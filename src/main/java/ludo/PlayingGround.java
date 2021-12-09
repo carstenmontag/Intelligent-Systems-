@@ -10,6 +10,7 @@ public class PlayingGround extends SimState {
     public long seed;
     public int numPlayers = 4;
     public int test_steps = 2;
+    public int numGames = 1;
     //Strategie eines Spielers, sollte über die Konsole verändert werden können
     //random = Alle Aktionen zufällig
     //aggressive = Es sollten nur wenige Figuren im Spiel sein, diese sollten sich schnell bewegen um andere Spiele einzuholen und rauszuwerfen
@@ -38,6 +39,7 @@ public class PlayingGround extends SimState {
         //yellow
         {new Int2D(2,11),new Int2D(3,11),new Int2D(3,12),new Int2D(2,12)}
     };
+
     public Int2D[][] two_d_finish_line = {
         //green
         {new Int2D(1,7),new Int2D(2,7),new Int2D(3,7),new Int2D(4,7)},
@@ -57,14 +59,45 @@ public class PlayingGround extends SimState {
         new Int2D(13,8), new Int2D(12,8), new Int2D(11,8), new Int2D(10,8), new Int2D(9,8), new Int2D(8,9), new Int2D(8,10),
         new Int2D(8,11), new Int2D(8,12), new Int2D(8,13), new Int2D(8,14), new Int2D(7,14), new Int2D(6,14), new Int2D(6,13),
         new Int2D(6,12), new Int2D(6,11), new Int2D(6,10), new Int2D(6,9), new Int2D(5,8), new Int2D(4,8), new Int2D(3,8),
-        new Int2D(2,8), new Int2D(1,8), new Int2D(0,8)};
-
+        new Int2D(2,8), new Int2D(1,8), new Int2D(0,8)
+    };
 
     public String[] names = {"Max", "Peter", "Hans", "Heinrich"};
+    public int[] strats = {0, 1, 2, 3};
     public Player[] players = new Player[4];
     public MersenneTwisterFast rng;
+
+    // Methoden für Model-Tab
+    public String getPlayer1() { return names[0]; }
+    public void setPlayer1(String val) { if (!val.equals("")) names[0] = val; }
+
+    public String getPlayer2() { return names[1]; }
+    public void setPlayer2(String val) { if (!val.equals("")) names[1] = val; }
+
+    public String getPlayer3() { return names[2]; }
+    public void setPlayer3(String val) { if (!val.equals("")) names[2] = val; }
+
+    public String getPlayer4() { return names[3]; }
+    public void setPlayer4(String val) { if (!val.equals("")) names[3] = val; }
+
+    public int getStrategiePlayer1() { return strats[0]; }
+    public void setStrategiePlayer1(int val) { if (val <= 3 && val >= 0) strats[0] = val; }
+    public Object domStrategiePlayer1() { return strategies; }
+
+    public int getStrategiePlayer2() { return strats[1]; }
+    public void setStrategiePlayer2(int val) { if (val <= 3 && val >= 0) strats[1] = val; }
+    public Object domStrategiePlayer2() { return strategies; }
+
+    public int getStrategiePlayer3() { return strats[2]; }
+    public void setStrategiePlayer3(int val) { if (val <= 3 && val >= 0) strats[2] = val; }
+    public Object domStrategiePlayer3() { return strategies; }
+
+    public int getStrategiePlayer4() { return strats[3]; }
+    public void setStrategiePlayer4(int val) { if (val <= 3 && val >= 0) strats[3] = val; }
+    public Object domStrategiePlayer4() { return strategies; }
+
     //Das Spielfeld soll wie ein einfaches Array sein, die Spieler spawnen die Figuren an fixen stellen. Falls ein Spieler am Ursprungspunkt-2 ist kommt er auf ein neues kleines array dass die Ziellinie abbildet
-//Spielfeld / Environment / Simulation
+    //Spielfeld / Environment / Simulation
     public PlayingGround(long seed) {
 		super(seed);
         this.seed = seed;	
@@ -73,17 +106,13 @@ public class PlayingGround extends SimState {
         createPlayers();
 	}
 
-   
-    
-
     public void start(){
         super.start();
         System.out.println("Starting Sim");
         //startSimulation();
     }
 
-    public void startSimulation(){
-        
+    public void startSimulation() {
         // Queue the Agents in a repeating schedule
         for(int i=0; i<numPlayers; i++){
             schedule.scheduleRepeating(players[i],i, 1.0);
@@ -93,10 +122,10 @@ public class PlayingGround extends SimState {
         //schedule.step(this);
         //System.out.println("Step" + i);
         }
-            System.out.println("Figures on the field :" + field.getAllObjects().size());
-            
+        System.out.println("Figures on the field :" + field.getAllObjects().size());
     }
-    public void createPlayers(){
+
+    public void createPlayers() {
         //Create the number of players specified in numPlayers
         //ToDo: Choose Strategy
         //Erstellung der Agenten und Festlegung ihrer Reihenfolge
@@ -113,7 +142,8 @@ public class PlayingGround extends SimState {
         for(int i=0;i<players.length;i++){System.out.println("Spieler "+ players[i].name + " Originaler Index" + players[i].playerIndex + " Neuer Index " + i);}
         setOrderDependantVariables();
     }
-    public Player[] getOrderedPlayers(int IndexHighestRoll){
+
+    public Player[] getOrderedPlayers(int IndexHighestRoll) {
         // Höchster Roll --> erster Spieler, alle anderen werden der Sitzreihenfolge nach geordnet 
         // z.B. 1. Index 3 --> 2. Index 0, 3. Index 1, 4. Index 2 
         Player[] ordered = new Player[numPlayers];
@@ -130,20 +160,23 @@ public class PlayingGround extends SimState {
         }
         return ordered;
     }
-    public void setOrderDependantVariables(){
+
+    public void setOrderDependantVariables() {
         for(int i = 0; i<this.numPlayers; i++){
             players[i].setOrderDependantVariables(FigureStarts[i],FigureFinishes[i],two_d_spawns[i], two_d_finish_line[i],i );
         }
     }
-    public int getIndexOfHighestRoll(int[] rolls){
+
+    public int getIndexOfHighestRoll(int[] rolls) {
         if ( rolls == null || rolls.length == 0 ) return -1; // null or empty
         int largest = 0;
         for (int i = 1; i < rolls.length; i++ ){
             if (rolls[i]>rolls[largest]) largest = i;
         }
         return largest; // position of the first largest found
-}
-    public static void main(String[] args){
+    }
+
+    public static void main(String[] args) {
         long seed = System.currentTimeMillis();
         PlayingGround test = new PlayingGround(seed);
         System.out.println("Seed " + seed);
