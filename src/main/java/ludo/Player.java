@@ -50,7 +50,7 @@ public class Player implements Steppable {
         System.out.println("Possible moves : " + PossibleMoves.length);
         if (PossibleMoves.length>0) {
             Move move = determineMove(PossibleMoves);
-            System.out.println("Move" + move.originx + " --> " + move.targetx );
+            System.out.println("Move " + move.originx + " --> " + move.targetx + " Player : "+ playerIndex+ " Piece :" + move.piece.PieceIndex);
             move.execute();
         }
         else {return;}
@@ -62,7 +62,7 @@ public class Player implements Steppable {
         int possible_counter = 0;
         Move[] moves = new Move[4];
         for(int i = 0; i<AtStartPieces.length; i++){
-            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, tempBoard, finishLine);
+            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, tempBoard);
             if (move.possible){possible_counter++;}
             moves[i] = move;
         }
@@ -101,7 +101,7 @@ public class Player implements Steppable {
         //Die Figuren sollen auf pro Spieler Basis existieren, ist das möglich? Vielleicht die Figuren als einfache Attribute
         //Oder die Figuren als Objekte in der Simulationsenvironment, wäre vermutlich sinnvoll
         for(int i = 0;i<=AtStartPieces.length-1;i++){
-            AtStartPieces[i] = new GamePiece(playerIndex,start,finish,i, two_d_spawns[i],tempBoard);
+            AtStartPieces[i] = new GamePiece(playerIndex,start,finish,i, two_d_spawns[i],two_d_finish_line,tempBoard);
             AtStartPieces[i].set_to_spawn();
         }
     }
