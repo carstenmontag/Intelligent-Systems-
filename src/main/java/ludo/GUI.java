@@ -17,26 +17,23 @@ public class GUI extends GUIState {
     public Display2D display;
     public JFrame displayFrame;
     public PlayingGround sim;
+    public Controller con;
     SparseGridPortrayal2D boardPortrayal = new SparseGridPortrayal2D();
     public int num_players = 4;
     public int steps_per_sim = 3;
     public int sims = 1;
+    public int current_player = 0;
+    public Console c;
     public static void main (String[] args){
-        PlayingGround sim = new PlayingGround(System.currentTimeMillis());
         GUI vid = new GUI();
-        Console c = new Console(vid);
-        c.setVisible(true);
     }
-
     public GUI(){
         super(new PlayingGround(System.currentTimeMillis()));
+        c = new Console(this);
+        c.setVisible(true);
         System.out.println("GUI Construct");
-        
+   
     }
-    public GUI(SimState state){
-        super(state);
-    }
-
     public static String getName(){
         return "Ludo";
     }
@@ -56,11 +53,8 @@ public class GUI extends GUIState {
         
         // Queue the Agents in a repeating schedule
         System.out.println("Void Start ");
+        state.schedule.scheduleOnce(0,0,sim.players[0]);
         
-            
-        for(int i=0; i<sim.numPlayers; i++){
-            state.schedule.scheduleRepeating(sim.players[i],i, 1.0);
-        }
         
         // Apply the schedule until the game is over
        
@@ -73,10 +67,15 @@ public class GUI extends GUIState {
     }
     @Override
     public boolean step(){
+        int next_player;
+        if (current_player == 3) {next_player = 0;}
+        else {next_player = current_player +1;}
         boolean success = true;
         if (!sim.game_over){
-             success = state.schedule.step(state);
-             setupPortrayals();
+            state.schedule.scheduleOnce(state.schedule.getTime()+1,0,sim.players[next_player]);
+            success = state.schedule.step(state);
+            c.refresh();
+            current_player = next_player;
             }
         System.out.println(""+ state.schedule.getSteps());
         System.out.println(""+ state.schedule.getTime());

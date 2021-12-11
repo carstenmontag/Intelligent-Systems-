@@ -42,13 +42,13 @@ public class PlayingGround extends SimState {
 
     public Int2D[][] two_d_finish_line = {
         //green
-        {new Int2D(1,7),new Int2D(2,7),new Int2D(3,7),new Int2D(4,7)},
+        {new Int2D(1,7),new Int2D(2,7),new Int2D(3,7),new Int2D(4,7), new Int2D(5,7), new Int2D(6,7)},
         //red
-        {new Int2D(7,1),new Int2D(7,2),new Int2D(7,3),new Int2D(7,4)},
+        {new Int2D(7,1),new Int2D(7,2),new Int2D(7,3),new Int2D(7,4), new Int2D(7,5), new Int2D(7,6)},
         //blue
-        {new Int2D(13,7),new Int2D(12,7),new Int2D(11,7),new Int2D(10,7)},
+        {new Int2D(13,7),new Int2D(12,7),new Int2D(11,7),new Int2D(10,7), new Int2D(9,7), new Int2D(8,7)},
          //yellow 
-        {new Int2D(7,13),new Int2D(7,12),new Int2D(7,11),new Int2D(7,10)}
+        {new Int2D(7,13),new Int2D(7,12),new Int2D(7,11),new Int2D(7,10), new Int2D(7,9), new Int2D(7,8)}
     };
 
     public static Int2D[] locations = {

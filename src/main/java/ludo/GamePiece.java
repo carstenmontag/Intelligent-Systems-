@@ -14,6 +14,7 @@ public class GamePiece{
     public int PieceIndex;
     public boolean isset = false;
     public boolean hasfinished = false;
+    public boolean done = false;
     public Int2D spawn ;
     public SparseGrid2D field;
     public int[] corridor = new int[6];

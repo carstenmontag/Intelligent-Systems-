@@ -28,8 +28,6 @@ public Move(GamePiece piece, int roll, GamePiece[] start_field, SparseGrid2D fie
 
 public int determineTarget(){
     
-
-
     if (originx == -1 && roll != 6){return -1;}
     if(inFinishCorridor()&&canFinish()){
 
@@ -70,8 +68,8 @@ public int determineTarget(){
 }
 public boolean movePossible(){
     System.out.println(originx + " Roll " + roll +"-->" + targetx);
-    int last_possible_finish = piece.finish +4;
-    if (piece.finish == 0) {last_possible_finish = 51+4;}
+    int last_possible_finish = piece.finish +6;
+    if (piece.finish == 0) {last_possible_finish = 51+6;}
     // case figure at start + target start
     if (targetx == -1 ){return false;}
     else if (inFinishCorridor()){
