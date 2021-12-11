@@ -14,6 +14,9 @@ public class Move {
     public boolean possible;
     public boolean doesBeat;
     public int finish = 9999;
+    public Bag ObjectsAtTarget;
+    public boolean canBeat;
+    public boolean canStack;
 
 public Move(GamePiece piece, int roll, GamePiece[] start_field, SparseGrid2D field_copy){
     this.piece = piece;
@@ -86,17 +89,27 @@ public boolean movePossible(){
         }
         return true;
     }
-    
-    Bag ObjectsAtTarget = (Bag)field_copy.getObjectsAtLocation(targetx, 0);
+
+    if(checkObjectAtTarget()) {
+        if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
+            canStack = true;
+            return true;
+        }
+        else {
+            canBeat = true;
+            return true;
+        }
+    }
+    else {return true;}
+}
+
+public boolean checkObjectAtTarget() {
+    ObjectsAtTarget = (Bag)field_copy.getObjectsAtLocation(PlayingGround.locations[targetx]);
     // no figure at target
-    if (ObjectsAtTarget == null) {return true;}
+    if (ObjectsAtTarget == null) {return false;}
     // figure at target
-    GamePiece PieceAtTarget = (GamePiece) ObjectsAtTarget.get(0);
-    
-    if (checkTargetFriendly(PieceAtTarget) == true){return false;}
-    else{return true;}
-    //if (overshoots() && canFinish()){ return true;}
-    //else{return false;}
+    return true;
+
 }
 
 public boolean inFinishCorridor(){
@@ -120,65 +133,47 @@ public boolean canFinish(){
         return false;
     }
 }
-public boolean canBeat(){
-    return false;
-}
+
 public boolean overshoots(){ // Formel falsch
     if (targetx>piece.finish) {return true;} 
     else {return false;}
 }
 
-public void execute() throws ArithmeticException{
+public void execute() {
 
+    System.out.println("Execute logic : ");
+    // ist im Finish Corridor und can finishen
     if (finish!=9999) {
         piece.set_to_finish_loc(finish, targetx);
-        return;  
     }
+    // ist fished und bewegt sich auf dem finish feld
     else if (piece.hasfinished){
         if (piece.finish!= 0){
             piece.set_to_finish_loc(targetx-piece.finish-1, targetx);
-            return;
         }
         else {
             piece.set_to_finish_loc(targetx-52, targetx);
         }
     }
-    System.out.println("Execute logic : ");
-    if (targetx == -1) {throw new ArithmeticException("Targetx is " + targetx + " this is not a valid move.");}
-    boolean can_beat = canBeat();
-    // insert into field move // no beat
-    if (targetx == piece.start && !can_beat){
-
-        insertToField();
-    } 
-    // insert and beat 
-    else if(targetx == piece.start && can_beat){
-
+    // ist im start feld und geht raus
+    else if (targetx == piece.start){
+        insertToField(canBeat);
     }
-    else if (!piece.hasfinished) {
+    // standart move
+    else {
         piece.set_to_field_loc(targetx);
     }
-// regular move
-
-// regular beating move
-
-// finish Piece and set to finish field
-
-// move on finish field
 
 }
-public void insertToField(){
+public void insertToField(boolean beat){
     piece.set_to_start();
     piece.isset = true;
-    
 
+    if (beat) {
+        GamePiece target_piece = (GamePiece) ObjectsAtTarget.get(0);
+        System.out.println("GamePiece " + piece.PieceIndex + " from Player " + piece.ownerIndex + " beat " + target_piece.PieceIndex + " of Player " + target_piece.ownerIndex);
+        target_piece.set_to_spawn();
+        target_piece.isset = false;
+    }
 }
-//beatMove
-
-//insertToFieldMove
-
-//exitToFinishMove
-
-//regularMove
-
 }
