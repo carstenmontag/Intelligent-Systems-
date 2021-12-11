@@ -30,16 +30,13 @@ public Move(GamePiece piece, int roll, GamePiece[] start_field, SparseGrid2D fie
 }
 
 public int determineTarget(){
-    
     if (originx == -1 && roll != 6){return -1;}
     if(inFinishCorridor()&&canFinish()){
-
         int target = originx +roll;
         int finishIndex = 9999;
         if (piece.finish == 0) {
             finishIndex = target-piece.finish-1;
             finish = finishIndex-52;
-            
         }
         else {
             finishIndex = target;
@@ -49,13 +46,10 @@ public int determineTarget(){
         return finishIndex;
     }
     else if (originx == -1 && roll == 6){return piece.start;}
-    
     else if (piece.hasfinished){
         return originx +roll;
     }
-    
     // finish logic 
-   
     else {
         int target = originx +roll;
         // overshoots field 52 with index 51
@@ -63,8 +57,6 @@ public int determineTarget(){
             target = target - PlayingGround.locations.length;
         }
      // finish logic 
-    
-   
         return target;
     }
     
@@ -85,19 +77,22 @@ public boolean movePossible(){
     else if (piece.hasfinished) {
         if (targetx>last_possible_finish){
             return false;
-
+        
         }
         return true;
     }
 
     if(checkObjectAtTarget()) {
-        if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
-            canStack = true;
-            return true;
-        }
-        else {
-            canBeat = true;
-            return true;
+        if (ObjectsAtTarget.size() == 2){return false;}
+        else{
+            if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
+                canStack = true;
+                return true;
+            }
+            else {
+                canBeat = true;
+                return true;
+            }
         }
     }
     else {return true;}
@@ -133,20 +128,13 @@ public boolean canFinish(){
         return false;
     }
 }
-
-public boolean overshoots(){ // Formel falsch
-    if (targetx>piece.finish) {return true;} 
-    else {return false;}
-}
-
-public void execute() {
-
+public void executeMove() {
     System.out.println("Execute logic : ");
     // ist im Finish Corridor und can finishen
     if (finish!=9999) {
         piece.set_to_finish_loc(finish, targetx);
     }
-    // ist fished und bewegt sich auf dem finish feld
+    // ist finished und bewegt sich auf dem finish feld
     else if (piece.hasfinished){
         if (piece.finish!= 0){
             piece.set_to_finish_loc(targetx-piece.finish-1, targetx);
@@ -155,25 +143,26 @@ public void execute() {
             piece.set_to_finish_loc(targetx-52, targetx);
         }
     }
-    // ist im start feld und geht raus
+    // ist im Startfeld und bewegt sich aufs Board
     else if (targetx == piece.start){
-        insertToField(canBeat);
+        insertToField();
     }
     // standart move
     else {
-        piece.set_to_field_loc(targetx);
+        moveOnField();
     }
-
 }
-public void insertToField(boolean beat){
+public void beat(){
+    GamePiece target_piece = (GamePiece)ObjectsAtTarget.get(0);
+    System.out.println("GamePiece " + piece.PieceIndex + " from Player " + piece.ownerIndex + " beat " + target_piece.PieceIndex + " of Player " + target_piece.ownerIndex);
+    target_piece.set_to_spawn();
+}
+public void moveOnField(){
+    piece.set_to_field_loc(targetx);
+    if (canBeat){beat();}
+}
+public void insertToField(){
     piece.set_to_start();
-    piece.isset = true;
-
-    if (beat) {
-        GamePiece target_piece = (GamePiece) ObjectsAtTarget.get(0);
-        System.out.println("GamePiece " + piece.PieceIndex + " from Player " + piece.ownerIndex + " beat " + target_piece.PieceIndex + " of Player " + target_piece.ownerIndex);
-        target_piece.set_to_spawn();
-        target_piece.isset = false;
-    }
+    if (canBeat){beat();}
 }
 }

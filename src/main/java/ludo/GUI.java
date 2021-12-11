@@ -24,6 +24,12 @@ public class GUI extends GUIState {
     public int sims = 1;
     public int current_player = 0;
     public Console c;
+    Image redImage = new ImageIcon("src/main/resources/RedPiece.png").getImage();
+    Image blueImage = new ImageIcon("src/main/resources/BluePiece.png").getImage();
+    Image yellowImage = new ImageIcon("src/main/resources/YellowPiece.png").getImage();
+    Image greenImage = new ImageIcon("src/main/resources/GreenPiece.png").getImage();
+    public Image[] icon_images = {greenImage, redImage, blueImage, yellowImage};
+    public Image[] roadblock_images = new Image[4];
     public static void main (String[] args){
         GUI vid = new GUI();
     }
@@ -68,13 +74,24 @@ public class GUI extends GUIState {
     @Override
     public boolean step(){
         int next_player;
-        if (current_player == 3) {next_player = 0;}
-        else {next_player = current_player +1;}
+        if (current_player == 3){next_player = 0;}
+        else{next_player = current_player +1;}
         boolean success = true;
         if (!sim.game_over){
-            state.schedule.scheduleOnce(state.schedule.getTime()+1,0,sim.players[next_player]);
             success = state.schedule.step(state);
             c.refresh();
+
+            int roll = sim.current_roll;
+            if (roll == 6 && sim.six_counter<3){
+                next_player = current_player; 
+                System.out.println("Six Counter :" + sim.six_counter );
+            }
+            else {
+                sim.six_counter = 0;
+                System.out.println("Six Counter resetted" );
+            
+            }
+            state.schedule.scheduleOnce(state.schedule.getTime()+1,0,sim.players[next_player]);
             current_player = next_player;
             }
         System.out.println(""+ state.schedule.getSteps());
@@ -87,19 +104,12 @@ public class GUI extends GUIState {
     public void setupPortrayals() {
         PlayingGround board = (PlayingGround) state;
         boardPortrayal.setField(board.field);
-
-        Image redImage = new ImageIcon("src/main/resources/RedPiece.png").getImage();
-        Image blueImage = new ImageIcon("src/main/resources/BluePiece.png").getImage();
-        Image yellowImage = new ImageIcon("src/main/resources/YellowPiece.png").getImage();
-        Image greenImage = new ImageIcon("src/main/resources/GreenPiece.png").getImage();
-
-        Image[] images = {greenImage, redImage, blueImage, yellowImage};
-
+        // regular Images for GamePieces
         for (int i=0; i <= board.players.length-1; i++) {
             for (int j=0; j<= board.players[i].AtStartPieces.length-1; j++) {
                 boardPortrayal.setPortrayalForObject(board.players[i].AtStartPieces[j], new FacetedPortrayal2D(
                         new SimplePortrayal2D[] {
-                                new ImagePortrayal2D(images[i]),
+                                new ImagePortrayal2D(icon_images[i]),
                         }
                 ));
             }

@@ -12,7 +12,6 @@ public class GamePiece{
     public int start;
     public int finish;
     public int PieceIndex;
-    public boolean isset = false;
     public boolean hasfinished = false;
     public boolean done = false;
     public Int2D spawn ;

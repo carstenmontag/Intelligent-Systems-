@@ -19,6 +19,8 @@ public class PlayingGround extends SimState {
     //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
     public boolean game_over = false;
     public SparseGrid2D field;
+    public int current_roll ;
+    public int six_counter = 0;
     public int fieldWidth = 15;
     public int fieldHeight = 15;
 

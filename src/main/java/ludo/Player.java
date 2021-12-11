@@ -46,13 +46,18 @@ public class Player implements Steppable {
         //Mit state bekommt der Agent den aktuellen Status
         //Hier sollen die Aktionen durchgeführt werden
         int eyesThisMove = throwDice();
+        gameboard.current_roll = eyesThisMove;
+        if (eyesThisMove == 6) gameboard.six_counter++;
+        if (gameboard.six_counter == 3) {
+            System.out.println("Dritte 6 gewürfelt.");
+            return;
+        } 
         Move[] PossibleMoves = getPossibleMoves(eyesThisMove);
         System.out.println("Possible moves : " + PossibleMoves.length);
         if (PossibleMoves.length>0) {
             Move move = determineMove(PossibleMoves);
             System.out.println("Move " + move.originx + " --> " + move.targetx + " Player : "+ playerIndex+ " Piece :" + move.piece.PieceIndex);
-            move.execute();
-            
+            move.executeMove();
         }
         else {return;}
     }
