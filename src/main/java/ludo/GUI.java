@@ -24,12 +24,19 @@ public class GUI extends GUIState {
     public int sims = 1;
     public int current_player = 0;
     public Console c;
+
     Image redImage = new ImageIcon("src/main/resources/RedPiece.png").getImage();
     Image blueImage = new ImageIcon("src/main/resources/BluePiece.png").getImage();
     Image yellowImage = new ImageIcon("src/main/resources/YellowPiece.png").getImage();
     Image greenImage = new ImageIcon("src/main/resources/GreenPiece.png").getImage();
     public Image[] icon_images = {greenImage, redImage, blueImage, yellowImage};
-    public Image[] roadblock_images = new Image[4];
+
+    Image redImageBlock = new ImageIcon("src/main/resources/RedPieceBlock.png").getImage();
+    Image blueImageBlock = new ImageIcon("src/main/resources/BluePieceBlock.png").getImage();
+    Image yellowImageBlock = new ImageIcon("src/main/resources/YellowPieceBlock.png").getImage();
+    Image greenImageBlock = new ImageIcon("src/main/resources/GreenPieceBlock.png").getImage();
+    public Image[] roadblock_images = {greenImageBlock, redImageBlock, blueImageBlock, yellowImageBlock};
+
     public static void main (String[] args){
         GUI vid = new GUI();
     }
