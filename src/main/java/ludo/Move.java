@@ -16,7 +16,7 @@ public class Move {
     public int finish = 9999;
     public Bag ObjectsAtTarget;
     public boolean canBeat;
-    public boolean canStack;
+    public boolean canBlock;
 
 public Move(GamePiece piece, int roll, GamePiece[] start_field, SparseGrid2D field_copy){
     this.piece = piece;
@@ -86,7 +86,7 @@ public boolean movePossible(){
         if (ObjectsAtTarget.size() == 2){return false;}
         else{
             if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
-                canStack = true;
+                canBlock = true;
                 return true;
             }
             else {
@@ -106,7 +106,6 @@ public boolean checkObjectAtTarget() {
     return true;
 
 }
-
 public boolean inFinishCorridor(){
     int[] corridor = piece.corridor;
     for(int i = 0;i<=corridor.length-1;i++){
@@ -157,12 +156,20 @@ public void beat(){
     System.out.println("GamePiece " + piece.PieceIndex + " from Player " + piece.ownerIndex + " beat " + target_piece.PieceIndex + " of Player " + target_piece.ownerIndex);
     target_piece.set_to_spawn();
 }
+public void resolve_block(){}
+public void block(){
+    piece.blocks = true;
+    GamePiece blocks_with = (GamePiece)ObjectsAtTarget.get(0);
+    blocks_with.blocks = true;
+}
 public void moveOnField(){
     piece.set_to_field_loc(targetx);
     if (canBeat){beat();}
+    if (canBlock){block();}
 }
 public void insertToField(){
     piece.set_to_start();
     if (canBeat){beat();}
+    if (canBlock){block();}
 }
 }

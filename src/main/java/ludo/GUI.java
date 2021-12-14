@@ -67,13 +67,7 @@ public class GUI extends GUIState {
         // Queue the Agents in a repeating schedule
         System.out.println("Void Start ");
         state.schedule.scheduleOnce(0,0,sim.players[0]);
-        
-        
-        // Apply the schedule until the game is over
-       
-        //schedule.step(this);
-        //System.out.println("Step" + i);
-        
+    
         System.out.println("Figures on the field :" + sim.field.getAllObjects().size());
             
         
@@ -86,8 +80,10 @@ public class GUI extends GUIState {
         boolean success = true;
         if (!sim.game_over){
             success = state.schedule.step(state);
+            // iterate through all GamePieces of the current Player and check if any have to be repainted
+            if (change){setupPortrayals();}
+            // sim.players[current_player];
             c.refresh();
-
             int roll = sim.current_roll;
             if (roll == 6 && sim.six_counter<3){
                 next_player = current_player; 
@@ -114,11 +110,11 @@ public class GUI extends GUIState {
         // regular Images for GamePieces
         for (int i=0; i <= board.players.length-1; i++) {
             for (int j=0; j<= board.players[i].AtStartPieces.length-1; j++) {
-                boardPortrayal.setPortrayalForObject(board.players[i].AtStartPieces[j], new FacetedPortrayal2D(
-                        new SimplePortrayal2D[] {
-                                new ImagePortrayal2D(icon_images[i]),
-                        }
-                ));
+                GamePiece rendering_object = board.players[i].AtStartPieces[i];  
+                FacetedPortrayal2D portrayal;
+                if (rendering_object.blocks){portrayal = new FacetedPortrayal2D(new SimplePortrayal2D[]{new ImagePortrayal2D(icon_images[i])});}
+                else {portrayal = new FacetedPortrayal2D(new SimplePortrayal2D[]{new ImagePortrayal2D(roadblock_images[i])});}
+                boardPortrayal.setPortrayalForObject(board.players[i].AtStartPieces[j], portrayal);
             }
         }
 
