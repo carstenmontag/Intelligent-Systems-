@@ -81,7 +81,10 @@ public class GUI extends GUIState {
         if (!sim.game_over){
             success = state.schedule.step(state);
             // iterate through all GamePieces of the current Player and check if any have to be repainted
-            if (change){setupPortrayals();}
+            if (sim.redraw_images){
+                setupPortrayals();
+                sim.redraw_images = false;
+            }
             // sim.players[current_player];
             c.refresh();
             int roll = sim.current_roll;
@@ -110,9 +113,9 @@ public class GUI extends GUIState {
         // regular Images for GamePieces
         for (int i=0; i <= board.players.length-1; i++) {
             for (int j=0; j<= board.players[i].AtStartPieces.length-1; j++) {
-                GamePiece rendering_object = board.players[i].AtStartPieces[i];  
+                GamePiece rendering_object = board.players[i].AtStartPieces[j];  
                 FacetedPortrayal2D portrayal;
-                if (rendering_object.blocks){portrayal = new FacetedPortrayal2D(new SimplePortrayal2D[]{new ImagePortrayal2D(icon_images[i])});}
+                if (!rendering_object.blocks){portrayal = new FacetedPortrayal2D(new SimplePortrayal2D[]{new ImagePortrayal2D(icon_images[i])});}
                 else {portrayal = new FacetedPortrayal2D(new SimplePortrayal2D[]{new ImagePortrayal2D(roadblock_images[i])});}
                 boardPortrayal.setPortrayalForObject(board.players[i].AtStartPieces[j], portrayal);
             }

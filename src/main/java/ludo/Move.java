@@ -17,11 +17,11 @@ public class Move {
     public Bag ObjectsAtTarget;
     public boolean canBeat;
     public boolean canBlock;
+    public boolean redraw_images;
 
 public Move(GamePiece piece, int roll, GamePiece[] start_field, SparseGrid2D field_copy){
     this.piece = piece;
     this.field_copy = field_copy;
-    
     this.start_field = start_field;
     this.roll = roll;
     originx = piece.positionx;
@@ -131,16 +131,11 @@ public void executeMove() {
     System.out.println("Execute logic : ");
     // ist im Finish Corridor und can finishen
     if (finish!=9999) {
-        piece.set_to_finish_loc(finish, targetx);
+        moveToFinishCorridor();
     }
     // ist finished und bewegt sich auf dem finish feld
     else if (piece.hasfinished){
-        if (piece.finish!= 0){
-            piece.set_to_finish_loc(targetx-piece.finish-1, targetx);
-        }
-        else {
-            piece.set_to_finish_loc(targetx-52, targetx);
-        }
+        moveOnFinishCorridor();
     }
     // ist im Startfeld und bewegt sich aufs Board
     else if (targetx == piece.start){
@@ -150,26 +145,53 @@ public void executeMove() {
     else {
         moveOnField();
     }
+
 }
 public void beat(){
     GamePiece target_piece = (GamePiece)ObjectsAtTarget.get(0);
     System.out.println("GamePiece " + piece.PieceIndex + " from Player " + piece.ownerIndex + " beat " + target_piece.PieceIndex + " of Player " + target_piece.ownerIndex);
     target_piece.set_to_spawn();
 }
-public void resolve_block(){}
+public void resolve_block(){
+    piece.blocks = false; 
+    GamePiece ObjectAtOrigin = (GamePiece)field_copy.getObjectsAtLocation(PlayingGround.locations[originx]).get(0);
+    ObjectAtOrigin.blocks = false;
+    redraw_images = true;
+
+}
 public void block(){
     piece.blocks = true;
     GamePiece blocks_with = (GamePiece)ObjectsAtTarget.get(0);
     blocks_with.blocks = true;
+    redraw_images = true;
+
+
 }
 public void moveOnField(){
     piece.set_to_field_loc(targetx);
     if (canBeat){beat();}
+    if (piece.blocks){resolve_block();}
     if (canBlock){block();}
+
 }
 public void insertToField(){
     piece.set_to_start();
     if (canBeat){beat();}
     if (canBlock){block();}
 }
+
+public void moveToFinishCorridor(){
+    piece.set_to_finish_loc(finish, targetx);
+    if (piece.blocks){resolve_block();}
+}
+public void moveOnFinishCorridor(){
+    if (piece.finish!= 0){
+        piece.set_to_finish_loc(targetx-piece.finish-1, targetx);
+    }
+    else {
+        piece.set_to_finish_loc(targetx-52, targetx);
+    }
+}
+public void finishPiece(){}
+
 }

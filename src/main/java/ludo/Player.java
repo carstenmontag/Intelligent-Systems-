@@ -58,6 +58,7 @@ public class Player implements Steppable {
             Move move = determineMove(PossibleMoves);
             System.out.println("Move " + move.originx + " --> " + move.targetx + " Player : "+ playerIndex+ " Piece :" + move.piece.PieceIndex);
             move.executeMove();
+            gameboard.redraw_images = move.redraw_images;
         }
         else {return;}
     }
