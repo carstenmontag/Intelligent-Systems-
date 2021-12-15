@@ -77,7 +77,7 @@ public boolean movePossible(){
     else if (piece.hasfinished) {
         if (targetx>last_possible_finish){
             return false;
-        
+
         }
         return true;
     }
@@ -95,7 +95,61 @@ public boolean movePossible(){
             }
         }
     }
+
+    if (scanForBlock(originx+1, targetx)) {
+        System.out.println(piece.PieceIndex + " of Player " + piece.ownerIndex + " got blocked!");
+        return false;
+    }
     else {return true;}
+}
+
+// true = feindlich Blockade
+public boolean scanForBlock(int from, int to) {
+
+    int[] toScan;
+
+    if (canFinish() && targetx > piece.finish) {
+
+        toScan = new int[piece.finish - originx];
+
+        if (targetx > 51 && piece.finish==0) {
+            for (int i=0; i<=toScan.length-1; i++) {
+                int next = from + i;
+                if (next > 51) {
+                    toScan[i] = next - 52;
+                }
+            }
+        } else {
+            for (int i=0; i<=toScan.length-1; i++) {
+                toScan[i] = from + i;
+            }
+        }
+
+    }else {
+        toScan = new int[to-from];
+
+        for (int i=0; i<=toScan.length-1; i++) {
+            toScan[i] = from + i;
+        }
+    }
+
+
+
+
+
+    for (int i=from; i<=to; i++) {
+        int numPieces = field_copy.numObjectsAtLocation(PlayingGround.locations[i].getX(), PlayingGround.locations[i].getY());
+
+        if (numPieces ==2) {
+            Bag Pieces = (Bag) field_copy.getObjectsAtLocation(PlayingGround.locations[i]);
+
+            GamePiece firstPiece = (GamePiece) Pieces.get(0);
+            if (!checkTargetFriendly(firstPiece)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 public boolean checkObjectAtTarget() {
