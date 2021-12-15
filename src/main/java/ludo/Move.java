@@ -83,20 +83,20 @@ public boolean movePossible(){
     }
 
     if(checkObjectAtTarget()) {
-        if (ObjectsAtTarget.size() == 2){return false;}
-        else{
-            if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
-                canBlock = true;
-                return true;
-            }
-            else {
-                canBeat = true;
-                return true;
-            }
+        if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
+            canBlock = true;
+            return true;
         }
+        else {
+            canBeat = true;
+            return true;
+        }
+        
     }
+    int first_scan = originx+1;
+    if (first_scan == 52) {first_scan = 0 ;}
 
-    if (scanForBlock(originx+1, targetx)) {
+    if (scanForBlock()) {
         System.out.println(piece.PieceIndex + " of Player " + piece.ownerIndex + " got blocked!");
         return false;
     }
@@ -104,49 +104,58 @@ public boolean movePossible(){
 }
 
 // true = feindlich Blockade
-public boolean scanForBlock(int from, int to) {
-
+public boolean scanForBlock() {
+    if (originx == -1) {return false;}
     int[] toScan;
-
-    if (canFinish() && targetx > piece.finish) {
-
-        toScan = new int[piece.finish - originx];
-
-        if (targetx > 51 && piece.finish==0) {
-            for (int i=0; i<=toScan.length-1; i++) {
-                int next = from + i;
-                if (next > 51) {
-                    toScan[i] = next - 52;
-                }
-            }
-        } else {
-            for (int i=0; i<=toScan.length-1; i++) {
-                toScan[i] = from + i;
+    // Länge des Arrays feststellen
+    if (canFinish()) {
+        if (piece.finish != 0) {
+            toScan = new int[piece.finish-originx];
+            for(int i = 0; i<toScan.length-1;i++){
+                toScan[i] = originx+i;
             }
         }
-
-    }else {
-        toScan = new int[to-from];
-
-        for (int i=0; i<=toScan.length-1; i++) {
-            toScan[i] = from + i;
+        else{ 
+            toScan = new int[52-originx];
+            for(int i = 0; i<toScan.length-1;i++){
+                int next = originx +i;
+                if (next == 52) {next = 0;}
+                toScan[i] = next;
+            }
         }
     }
+    else{
+        if (originx>targetx){
+            toScan = new int[(targetx+52)-originx];
+            for(int i = 0; i<toScan.length-1;i++){
+                toScan[i] = (originx+i)%52;
 
-
-
-
-
-    for (int i=from; i<=to; i++) {
-        int numPieces = field_copy.numObjectsAtLocation(PlayingGround.locations[i].getX(), PlayingGround.locations[i].getY());
+            }
+        }
+        else {
+            toScan = new int[targetx-originx];
+            for(int i = 0; i<toScan.length-1;i++){
+                toScan[i] = originx+i;
+            }
+        }
+    }       
+    // loop through array
+    for (int i=0; i<toScan.length-1; i++) {
+        int scanning = toScan[i];
+        int numPieces = field_copy.numObjectsAtLocation(PlayingGround.locations[scanning].getX(), PlayingGround.locations[scanning].getY());
 
         if (numPieces ==2) {
-            Bag Pieces = (Bag) field_copy.getObjectsAtLocation(PlayingGround.locations[i]);
+            Bag Pieces = (Bag) field_copy.getObjectsAtLocation(PlayingGround.locations[scanning]);
 
             GamePiece firstPiece = (GamePiece) Pieces.get(0);
-            if (!checkTargetFriendly(firstPiece)) {
+            if (!checkTargetFriendly(firstPiece)) {    
                 return true;
             }
+            // darf nicht aufs letzte feld da sich ein 3er Stack ergeben würde ! 
+            if (i == toScan.length-1){
+                return true;
+            }
+
         }
     }
     return false;
@@ -177,7 +186,7 @@ public boolean canFinish(){
     else {
         int target = originx + roll;
         if (piece.finish == 0){ target = target-52; }
-        if (target > piece.finish&& target <= piece.finish + 4){return true;}
+        if (target > piece.finish&& target <= piece.finish + 6){return true;}
         return false;
     }
 }
