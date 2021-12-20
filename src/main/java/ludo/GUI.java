@@ -136,6 +136,7 @@ public class GUI extends GUIState {
 
         displayFrame = display.createFrame();
         displayFrame.setTitle("Ludo Game");
+        displayFrame.setResizable(false);
         c.registerFrame(displayFrame);
         displayFrame.setVisible(true);
         display.attach(boardPortrayal, "FieldBoard" );
@@ -158,5 +159,4 @@ public class GUI extends GUIState {
         g.dispose();
         display.setBackdrop(new TexturePaint(b, new Rectangle(0,0,i.getWidth(null),i.getHeight(null))));
     }
-
 }
