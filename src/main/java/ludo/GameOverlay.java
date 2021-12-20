@@ -13,8 +13,6 @@ public class GameOverlay extends FieldPortrayal2D {
     public static final int GUTTER = 32;
     public static final int BORDER = 8;
     Font font = new Font("SansSerif", Font.BOLD, 18);
-    //Color color = new Color(33, 33, 222);
-
     public GameOverlay(GUI ui) { this.ui = ui;}
 
     int firstTimeNumG = 1;

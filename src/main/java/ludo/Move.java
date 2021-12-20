@@ -49,16 +49,7 @@ public int determineTarget(){
     else if (piece.hasfinished){
         return originx +roll;
     }
-    // finish logic 
-    else {
-        int target = originx +roll;
-        // overshoots field 52 with index 51
-        if (target>=PlayingGround.locations.length){
-            target = target - PlayingGround.locations.length;
-        }
-     // finish logic 
-        return target;
-    }
+    else {return (originx +roll)%52;}
     
 }
 public boolean movePossible(){
@@ -93,9 +84,6 @@ public boolean movePossible(){
         }
         
     }
-    int first_scan = originx+1;
-    if (first_scan == 52) {first_scan = 0 ;}
-
     if (scanForBlock()) {
         System.out.println(piece.PieceIndex + " of Player " + piece.ownerIndex + " got blocked!");
         return false;
@@ -118,8 +106,7 @@ public boolean scanForBlock() {
         else{ 
             toScan = new int[52-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                int next = originx +i;
-                if (next == 52) {next = 0;}
+                int next = (originx+i)%52;
                 toScan[i] = next;
             }
         }
