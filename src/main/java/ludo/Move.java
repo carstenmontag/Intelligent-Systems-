@@ -47,6 +47,7 @@ public int determineTarget(){
     }
     else if (originx == -1 && roll == 6){return piece.start;}
     else if (piece.hasfinished){
+        finish = piece.position_home + roll;
         return originx +roll;
     }
     else {return (originx +roll)%52;}
@@ -59,18 +60,17 @@ public boolean movePossible(){
     // case figure at start + target start
     if (targetx == -1 ){return false;}
     else if (inFinishCorridor()){
-        if (canFinish()){ return true;}
-        else {
-            int target = originx + roll ;
-            if (target> last_possible_finish) {return false;}     
+        if (canFinish()){
+            if(!scanHomeColumnBlock()){return true;}
         }
+        
+        int target = originx + roll ;
+        if (target> last_possible_finish) {return false;}     
+        
     }
     else if (piece.hasfinished) {
-        if (targetx>last_possible_finish){
-            return false;
-
-        }
-        return true;
+        if (targetx>last_possible_finish || scanHomeColumnBlock()){return false;}
+        else{return true;}
     }
 
     if(checkObjectAtTarget()) {
@@ -90,7 +90,40 @@ public boolean movePossible(){
     }
     else {return true;}
 }
-
+//true bei Blockade(friendly) 
+public boolean scanHomeColumnBlock() {
+    Int2D[] finish_line = piece.finish_line;
+    // mit indizes für finish_line
+    int[] toScan; 
+    if (!piece.hasfinished){
+        System.out.println("Arraylength calc " +finish+ "+"+1+"="+(finish+1));
+        toScan = new int[finish+1]; 
+        for(int i = 0; i<= toScan.length-1; i++){
+            toScan[i] = i;
+        }
+    }
+    else{
+        toScan = new int[finish-piece.position_home];
+        System.out.println("Arraylength calc "+ finish+"-"+piece.position_home+"="+(finish-piece.position_home));
+        for(int i = 0; i<= toScan.length-1; i++){
+            toScan[i] = piece.position_home +1+i;
+        }
+    }
+    System.out.println("hasfinished "+ piece.hasfinished);
+    
+    for(int i = 0; i<=toScan.length-1;i++){
+        int scanning = toScan[i];
+        System.out.println(scanning);
+        Bag friendly_piece = (Bag)field_copy.getObjectsAtLocation(finish_line[scanning]);
+        // no figure at target
+        if (friendly_piece != null) {
+            if (scanning == 5) {return false;}
+            else {return true;}
+            //if (piece_at_scan.position_home<=piece.position_home && piece_at_scan.position_home>= finish){return true;}       
+        }
+    }
+    return false;
+}
 // true = feindlich Blockade
 public boolean scanForBlock() {
     if (originx == -1) {return false;}

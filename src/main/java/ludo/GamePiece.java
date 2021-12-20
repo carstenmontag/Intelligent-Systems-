@@ -6,12 +6,14 @@ import sim.util.Int2D;
 public class GamePiece{
     //Spielfigur als Objekt notwendig?
     public int ownerIndex;
+    public int position_home = -1;
     public int positionx;
     public Int2D position_two_d;   
     public Int2D[] finish_line; 
     public int start;
     public int finish;
     public int PieceIndex;
+
     public boolean hasfinished = false;
     public boolean done = false;
     public boolean blocks = false;
@@ -67,6 +69,7 @@ public class GamePiece{
         this.positionx = pos_on_1d_board;
         this.position_two_d  = target2d; 
         this.hasfinished = true;
+        this.position_home = index_finish_array;
     }
     public void set_to_random_loc(){
         int rand = new MersenneTwisterFast().nextInt(52);
