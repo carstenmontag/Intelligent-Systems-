@@ -61,34 +61,28 @@ public boolean movePossible(){
     if (targetx == -1 ){return false;}
     else if (inFinishCorridor()){
         if (canFinish()){
-            if(!scanHomeColumnBlock()){return true;}
+            return !scanHomeColumnBlock();
         }
-        
         int target = originx + roll ;
-        if (target> last_possible_finish) {return false;}     
-        
+        return target <= last_possible_finish;
     }
     else if (piece.hasfinished) {
-        if (targetx>last_possible_finish || scanHomeColumnBlock()){return false;}
-        else{return true;}
+        return targetx <= last_possible_finish && !scanHomeColumnBlock();
     }
-
-    if(checkObjectAtTarget()) {
-        if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
-            canBlock = true;
-            return true;
-        }
-        else {
-            canBeat = true;
-            return true;
-        }
-        
-    }
-    if (scanForBlock()) {
+    else if (scanForBlock()) {
         System.out.println(piece.PieceIndex + " of Player " + piece.ownerIndex + " got blocked!");
         return false;
     }
-    else {return true;}
+    else if(checkObjectAtTarget()) {
+        if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
+            canBlock = true;
+        }
+        else {
+            canBeat = true;
+        }
+        return true;
+    }
+    return true;
 }
 //true bei Blockade(friendly) 
 public boolean scanHomeColumnBlock() {
@@ -96,7 +90,7 @@ public boolean scanHomeColumnBlock() {
     // mit indizes für finish_line
     int[] toScan; 
     if (!piece.hasfinished){
-        System.out.println("Arraylength calc " +finish+ "+"+1+"="+(finish+1));
+        System.out.println("Arraylength calc " +finish+ "+"+1+"="+(finish+1) + "for Player " + piece.ownerIndex + ". Piece: " + piece.PieceIndex + ". Ori:" + originx);
         toScan = new int[finish+1]; 
         for(int i = 0; i<= toScan.length-1; i++){
             toScan[i] = i;
@@ -175,7 +169,6 @@ public boolean scanForBlock() {
             if (i == toScan.length-1){
                 return true;
             }
-
         }
     }
     return false;
@@ -236,26 +229,24 @@ public void beat(){
     target_piece.set_to_spawn();
 }
 public void resolve_block(){
+    System.out.println("Ori: " + originx);
     piece.blocks = false; 
     GamePiece ObjectAtOrigin = (GamePiece)field_copy.getObjectsAtLocation(PlayingGround.locations[originx]).get(0);
     ObjectAtOrigin.blocks = false;
     redraw_images = true;
-
+    System.out.println("block resolved. Player: " + piece.ownerIndex + ". Piece: " + piece.PieceIndex + ". Other Piece: " + ObjectAtOrigin.PieceIndex);
 }
 public void block(){
     piece.blocks = true;
     GamePiece blocks_with = (GamePiece)ObjectsAtTarget.get(0);
     blocks_with.blocks = true;
     redraw_images = true;
-
-
 }
 public void moveOnField(){
     piece.set_to_field_loc(targetx);
-    if (canBeat){beat();}
     if (piece.blocks){resolve_block();}
     if (canBlock){block();}
-
+    if (canBeat){beat();}
 }
 public void insertToField(){
     piece.set_to_start();
@@ -275,6 +266,4 @@ public void moveOnFinishCorridor(){
         piece.set_to_finish_loc(targetx-52, targetx);
     }
 }
-public void finishPiece(){}
-
 }
