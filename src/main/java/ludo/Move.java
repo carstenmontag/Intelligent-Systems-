@@ -61,7 +61,7 @@ public boolean movePossible(){
     if (targetx == -1 ){return false;}
     else if (inFinishCorridor()){
         if (canFinish()){
-            return !scanHomeColumnBlock();
+            return !scanHomeColumnBlock()&&!scanForBlock(); ////// unsicher ? war schon geändert als ich heute angefangen hab, keiner Erinnerung mehr dran
         }
         int target = originx + roll ;
         return target <= last_possible_finish;
@@ -74,6 +74,7 @@ public boolean movePossible(){
         return false;
     }
     else if(checkObjectAtTarget()) {
+        if(ObjectsAtTarget.numObjs>1) return false; ///// AUSSCHLAGGEBENDER BUGFIX !!! 
         if(checkTargetFriendly((GamePiece) ObjectsAtTarget.get(0))) {
             canBlock = true;
         }
@@ -123,17 +124,23 @@ public boolean scanForBlock() {
     if (originx == -1) {return false;}
     int[] toScan;
     // Länge des Arrays feststellen
+    
+    ///////// ÄNDERUNGEN HIER BITTE ÜBERPRÜFEN, BIN UNSICHER !!!! 
+    ///////// Änderung siehe Screenshot in Discord, origin wird nicht mehr gescannt, stattdessen ein Feld weiter hinten , deshalb +1 
+    ///////// BSP : originx = 24, targetx = 30 
+    ///////// vorher scan 24,25,26,27,28
+    ///////// jetzt scan  25,26,27,28,29 + !!!! check des letzten Blockes in der MovePossible Methode 
     if (canFinish()) {
         if (piece.finish != 0) {
             toScan = new int[piece.finish-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = originx+i;
+                toScan[i] = (originx+i+1)%52;
             }
         }
         else{ 
-            toScan = new int[52-originx];
+            toScan = new int[(52-originx)+1];
             for(int i = 0; i<toScan.length-1;i++){
-                int next = (originx+i)%52;
+                int next = (originx+i+1)%52;
                 toScan[i] = next;
             }
         }
@@ -142,20 +149,21 @@ public boolean scanForBlock() {
         if (originx>targetx){
             toScan = new int[(targetx+52)-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = (originx+i)%52;
+                toScan[i] = (originx+i+1)%52 ;
 
             }
         }
         else {
             toScan = new int[targetx-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = originx+i;
+                toScan[i] = originx+i+1;
             }
         }
     }       
     // loop through array
     for (int i=0; i<toScan.length-1; i++) {
         int scanning = toScan[i];
+        System.out.println("Scanning Position " + scanning);
         int numPieces = field_copy.numObjectsAtLocation(PlayingGround.locations[scanning].getX(), PlayingGround.locations[scanning].getY());
 
         if (numPieces ==2) {
@@ -163,6 +171,7 @@ public boolean scanForBlock() {
 
             GamePiece firstPiece = (GamePiece) Pieces.get(0);
             if (!checkTargetFriendly(firstPiece)) {    
+                System.out.println("Blocked at Position" + scanning);
                 return true;
             }
             // darf nicht aufs letzte feld da sich ein 3er Stack ergeben würde ! 
