@@ -31,7 +31,8 @@ public class GamePiece{
         this.finish_line = finish_line;
         this.field = field;
         calc_finish_corridor();
-        }
+    }
+
     public void calc_finish_corridor(){
         corridor[0] = finish;
         int tmpfinish = finish;

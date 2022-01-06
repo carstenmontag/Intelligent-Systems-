@@ -231,6 +231,13 @@ public void executeMove() {
         moveOnField();
     }
 
+    //Überprüfe ob GamePiece done ist
+    if(piece.position_two_d == piece.finish_line[5]) {
+        piece.done = true;
+    }
+
+
+
 }
 public void beat(){
     GamePiece target_piece = (GamePiece)ObjectsAtTarget.get(0);

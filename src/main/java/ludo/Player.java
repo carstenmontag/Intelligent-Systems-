@@ -21,7 +21,7 @@ public class Player implements Steppable {
     public GamePiece[] AtStartPieces = new GamePiece[4];
     public SparseGrid2D tempBoard;
     public SparseGrid2D finishLine;
-    public int win;
+    public int placement;
     //public int figureNumber = 1;
 
     //Die Zielline, SparseGrid2D damit mehrere Objekte (Spielfiguren?) darauf gespeichert werden können.
@@ -36,10 +36,10 @@ public class Player implements Steppable {
         this.strategy = strategy;
         this.randomGenerator = rng;
         this.tempBoard = tempBoard;
-        this.win = 0;
+        this.placement = 0; //1=1Platz, 2=2Platz ...
         
     }
-    public void step(SimState state){ 
+    public void step(SimState state){
         System.out.println("Turn Player " + playerIndex);
         PlayingGround gameboard = (PlayingGround)state;
         tempBoard = gameboard.field;
@@ -60,7 +60,13 @@ public class Player implements Steppable {
             move.executeMove();
             gameboard.redraw_images = move.redraw_images;
         }
-        else {return;}
+
+        //Überprüfe ob alle Pieces des Spielers done sind
+        if (AtStartPieces[0].done && AtStartPieces[1].done && AtStartPieces[2].done && AtStartPieces[3].done) {
+            placement = 1;
+        }
+
+        return;
     }
     // mögliche Züge werden in der Form eines Objektes dargestellt
     // für jeden Move wird errechnet ob er durch die Spielrestriktionen mgl ist

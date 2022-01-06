@@ -45,8 +45,8 @@ public class GUI extends GUIState {
         c = new Console(this);
         c.setVisible(true);
         System.out.println("GUI Construct");
-   
     }
+
     public static String getName(){
         return "Ludo";
     }
@@ -74,12 +74,23 @@ public class GUI extends GUIState {
     }
     @Override
     public boolean step(){
+
         int next_player;
         if (current_player == 3){next_player = 0;}
         else{next_player = current_player +1;}
         boolean success = true;
         if (!sim.game_over){
             success = state.schedule.step(state);
+
+            // Überprüfe ob Game Beendet ist.
+            if ((sim.players[0].placement != 0) && (sim.players[1].placement != 0) && (sim.players[2].placement != 0) && (sim.players[3].placement != 0)) {
+                sim.game_over = true;
+                //TODO Daten für Statistiken auslesen
+                sim.resetPlayers();
+                //TODO Portrayal richtig aktualiseren
+            }
+
+
             // iterate through all GamePieces of the current Player and check if any have to be repainted
             if (sim.redraw_images){
                 setupPortrayals();
@@ -99,7 +110,8 @@ public class GUI extends GUIState {
             }
             state.schedule.scheduleOnce(state.schedule.getTime()+1,0,sim.players[next_player]);
             current_player = next_player;
-            }
+        }
+
         System.out.println(""+ state.schedule.getSteps());
         System.out.println(""+ state.schedule.getTime());
         // Queue player again
@@ -125,6 +137,14 @@ public class GUI extends GUIState {
         setBackground();
         display.repaint();
     }
+
+    public void deletePortrayals() {
+        boardPortrayal.setPortrayalForAll(null);
+        display.reset();
+        setBackground();
+        display.repaint();
+    }
+
     public void load(SimState state){
         super.load(state);
         setupPortrayals();

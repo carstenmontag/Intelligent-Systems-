@@ -31,7 +31,7 @@ public class GameOverlay extends FieldPortrayal2D {
 
         graphics.drawString("Game: " + sim.numGames, BORDER, firstTimeNumG);
         graphics.drawString("Player 1: " + sim.players[0].name, (int)((info.clip.width - BORDER * 2) * 1 / 3 + BORDER), firstTimeNumG);
-        graphics.drawString("Wins: " + sim.players[0].win, (int)((info.clip.width - BORDER * 2) * 2 / 3 + BORDER), firstTimeNumG);
+        //graphics.drawString("Wins: " + sim.players[0].win, (int)((info.clip.width - BORDER * 2) * 2 / 3 + BORDER), firstTimeNumG);
 
     }
 

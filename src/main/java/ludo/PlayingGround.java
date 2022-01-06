@@ -10,7 +10,7 @@ public class PlayingGround extends SimState {
     public long seed;
     public int numPlayers = 4;
     public int test_steps = 2;
-    public int numGames = 1;
+
     //Strategie eines Spielers, sollte über die Konsole verändert werden können
     //random = Alle Aktionen zufällig
     //aggressive = Es sollten nur wenige Figuren im Spiel sein, diese sollten sich schnell bewegen um andere Spiele einzuholen und rauszuwerfen
@@ -18,6 +18,7 @@ public class PlayingGround extends SimState {
 
     //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
     public boolean game_over = false;
+    public int numGames = 1;
     public boolean redraw_images = false;
     
     public SparseGrid2D field;
@@ -145,6 +146,15 @@ public class PlayingGround extends SimState {
         players = getOrderedPlayers(highestRollPlayerIndex);
         for(int i=0;i<players.length;i++){System.out.println("Spieler "+ players[i].name + " Originaler Index" + players[i].playerIndex + " Neuer Index " + i);}
         setOrderDependantVariables();
+    }
+    
+    public void resetPlayers() {
+        for (Player current_player : players) {
+            for (GamePiece piece : current_player.AtStartPieces) {
+                piece = null;
+            }
+        }
+        createPlayers();
     }
 
     public Player[] getOrderedPlayers(int IndexHighestRoll) {
