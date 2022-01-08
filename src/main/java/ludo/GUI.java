@@ -24,6 +24,9 @@ public class GUI extends GUIState {
     public int sims = 1;
     public int current_player = 0;
     public Console c;
+    public PlayingGround emptyPlayingGround ;
+
+    String strats[][];
 
     Image redImage = new ImageIcon("src/main/resources/RedPiece.png").getImage();
     Image blueImage = new ImageIcon("src/main/resources/BluePiece.png").getImage();
@@ -38,10 +41,14 @@ public class GUI extends GUIState {
     public Image[] roadblock_images = {greenImageBlock, redImageBlock, blueImageBlock, yellowImageBlock};
 
     public static void main (String[] args){
-        GUI vid = new GUI();
+        String[] first_strat;
+        PlayingGround baseGround =  new PlayingGround(System.currentTimeMillis());
+        GUI vid = new GUI(baseGround);
+       
     }
-    public GUI(){
-        super(new PlayingGround(System.currentTimeMillis()));
+    public GUI(PlayingGround baseGround){
+        
+        super(baseGround);
         c = new Console(this);
         c.setVisible(true);
         System.out.println("GUI Construct");
@@ -84,10 +91,13 @@ public class GUI extends GUIState {
 
             // Überprüfe ob Game Beendet ist.
             if ((sim.players[0].placement != 0) && (sim.players[1].placement != 0) && (sim.players[2].placement != 0) && (sim.players[3].placement != 0)) {
-                sim.game_over = true;
+                //sim.game_over = true;
                 //TODO Daten für Statistiken auslesen
-                sim.resetPlayers();
-                //TODO Portrayal richtig aktualiseren
+                sim.finish();
+                //serializeGameResults(sim);
+                state = new PlayingGround(System.currentTimeMillis());
+                sim = (PlayingGround)state;
+                start();
             }
 
 
@@ -136,18 +146,6 @@ public class GUI extends GUIState {
         display.reset();
         setBackground();
         display.repaint();
-    }
-
-    public void deletePortrayals() {
-        boardPortrayal.setPortrayalForAll(null);
-        display.reset();
-        setBackground();
-        display.repaint();
-    }
-
-    public void load(SimState state){
-        super.load(state);
-        setupPortrayals();
     }
     public void init(Controller c) {
         super.init(c);

@@ -20,7 +20,7 @@ public class PlayingGround extends SimState {
     public boolean game_over = false;
     public int numGames = 1;
     public boolean redraw_images = false;
-    
+    public int[] strats = {0, 1, 2, 3};
     public SparseGrid2D field;
     public int current_roll ;
     public int six_counter = 0;
@@ -68,7 +68,6 @@ public class PlayingGround extends SimState {
     };
 
     public String[] names = {"Max", "Peter", "Hans", "Heinrich"};
-    public int[] strats = {0, 1, 2, 3};
     public Player[] players = new Player[4];
     public MersenneTwisterFast rng;
 
@@ -111,24 +110,7 @@ public class PlayingGround extends SimState {
         createPlayers();
 	}
 
-    public void start(){
-        super.start();
-        System.out.println("Starting Sim");
-        //startSimulation();
-    }
-
-    public void startSimulation() {
-        // Queue the Agents in a repeating schedule
-        for(int i=0; i<numPlayers; i++){
-            schedule.scheduleRepeating(players[i],i, 1.0);
-        }
-        // Apply the schedule until the game is over
-        for(int i=0; i<test_steps; i++) {
-        //schedule.step(this);
-        //System.out.println("Step" + i);
-        }
-        System.out.println("Figures on the field :" + field.getAllObjects().size());
-    }
+    
 
     public void createPlayers() {
         //Create the number of players specified in numPlayers
@@ -148,14 +130,6 @@ public class PlayingGround extends SimState {
         setOrderDependantVariables();
     }
     
-    public void resetPlayers() {
-        for (Player current_player : players) {
-            for (GamePiece piece : current_player.AtStartPieces) {
-                piece = null;
-            }
-        }
-        createPlayers();
-    }
 
     public Player[] getOrderedPlayers(int IndexHighestRoll) {
         // Höchster Roll --> erster Spieler, alle anderen werden der Sitzreihenfolge nach geordnet 
@@ -188,12 +162,5 @@ public class PlayingGround extends SimState {
             if (rolls[i]>rolls[largest]) largest = i;
         }
         return largest; // position of the first largest found
-    }
-
-    public static void main(String[] args) {
-        long seed = System.currentTimeMillis();
-        PlayingGround test = new PlayingGround(seed);
-        System.out.println("Seed " + seed);
-        test.start();
     }
 }
