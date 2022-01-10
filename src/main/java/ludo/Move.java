@@ -53,6 +53,7 @@ public int determineTarget(){
     else {return (originx +roll)%52;}
     
 }
+
 public boolean movePossible(){
     System.out.println(originx + " Roll " + roll +"-->" + targetx);
     int last_possible_finish = piece.finish +6;
@@ -85,6 +86,7 @@ public boolean movePossible(){
     }
     return true;
 }
+
 //true bei Blockade(friendly) 
 public boolean scanHomeColumnBlock() {
     Int2D[] finish_line = piece.finish_line;
@@ -119,6 +121,7 @@ public boolean scanHomeColumnBlock() {
     }
     return false;
 }
+
 // true = feindlich Blockade
 public boolean scanForBlock() {
     if (originx == -1) {return false;}
@@ -191,6 +194,7 @@ public boolean checkObjectAtTarget() {
     return true;
 
 }
+
 public boolean inFinishCorridor(){
     int[] corridor = piece.corridor;
     for(int i = 0;i<=corridor.length-1;i++){
@@ -199,10 +203,12 @@ public boolean inFinishCorridor(){
     return false;
 
 }
+
 public boolean checkTargetFriendly(GamePiece atTarget){
     if (piece.ownerIndex == atTarget.ownerIndex) {return true;}
     return false;
 }
+
 public boolean canFinish(){
     if (!inFinishCorridor()) {return false;}
     else {
@@ -212,6 +218,7 @@ public boolean canFinish(){
         return false;
     }
 }
+
 public void executeMove() {
     System.out.println("Execute logic : ");
     // ist im Finish Corridor und can finishen
@@ -235,15 +242,14 @@ public void executeMove() {
     if(piece.position_two_d == piece.finish_line[5]) {
         piece.done = true;
     }
-
-
-
 }
+
 public void beat(){
     GamePiece target_piece = (GamePiece)ObjectsAtTarget.get(0);
     System.out.println("GamePiece " + piece.PieceIndex + " from Player " + piece.ownerIndex + " beat " + target_piece.PieceIndex + " of Player " + target_piece.ownerIndex);
     target_piece.set_to_spawn();
 }
+
 public void resolve_block(){
     System.out.println("Ori: " + originx);
     piece.blocks = false; 
@@ -252,18 +258,21 @@ public void resolve_block(){
     redraw_images = true;
     System.out.println("block resolved. Player: " + piece.ownerIndex + ". Piece: " + piece.PieceIndex + ". Other Piece: " + ObjectAtOrigin.PieceIndex);
 }
+
 public void block(){
     piece.blocks = true;
     GamePiece blocks_with = (GamePiece)ObjectsAtTarget.get(0);
     blocks_with.blocks = true;
     redraw_images = true;
 }
+
 public void moveOnField(){
     piece.set_to_field_loc(targetx);
     if (piece.blocks){resolve_block();}
     if (canBlock){block();}
     if (canBeat){beat();}
 }
+
 public void insertToField(){
     piece.set_to_start();
     if (canBeat){beat();}
@@ -274,6 +283,7 @@ public void moveToFinishCorridor(){
     piece.set_to_finish_loc(finish, targetx);
     if (piece.blocks){resolve_block();}
 }
+
 public void moveOnFinishCorridor(){
     if (piece.finish!= 0){
         piece.set_to_finish_loc(targetx-piece.finish-1, targetx);

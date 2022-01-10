@@ -59,15 +59,14 @@ public class Player implements Steppable {
             System.out.println("Move " + move.originx + " --> " + move.targetx + " Player : "+ playerIndex+ " Piece :" + move.piece.PieceIndex);
             move.executeMove();
             gameboard.redraw_images = move.redraw_images;
-        }
 
-        //Überprüfe ob alle Pieces des Spielers done sind
-        if (AtStartPieces[0].done && AtStartPieces[1].done && AtStartPieces[2].done && AtStartPieces[3].done) {
-            placement = 1;
+            //Überprüfe ob alle Pieces des Spielers done sind
+            if (AtStartPieces[0].done && AtStartPieces[1].done && AtStartPieces[2].done && AtStartPieces[3].done) {
+                placement = gameboard.determinePlacement(name);
+            }
         }
-
-        return;
     }
+
     // mögliche Züge werden in der Form eines Objektes dargestellt
     // für jeden Move wird errechnet ob er durch die Spielrestriktionen mgl ist
     // sind mehrere Moves mgl so wird nach der angegebenen Strategie entschieden --> ein Move bekommt Attribute wie "beat" oder "keep up", hiernach kann entschieden werden

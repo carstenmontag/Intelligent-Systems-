@@ -7,6 +7,7 @@ import sim.portrayal.SimplePortrayal2D;
 import sim.portrayal.grid.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import javax.swing.*;
 
 import sim.portrayal.simple.FacetedPortrayal2D;
@@ -92,12 +93,23 @@ public class GUI extends GUIState {
             // Überprüfe ob Game Beendet ist.
             if ((sim.players[0].placement != 0) && (sim.players[1].placement != 0) && (sim.players[2].placement != 0) && (sim.players[3].placement != 0)) {
                 //sim.game_over = true;
+
+                System.out.println(sim.placements);
+                System.out.println(sim.players[0].placement);
+                System.out.println(sim.players[1].placement);
+                System.out.println(sim.players[2].placement);
+                System.out.println(sim.players[3].placement);
+
                 //TODO Daten für Statistiken auslesen
                 sim.finish();
                 //serializeGameResults(sim);
                 state = new PlayingGround(System.currentTimeMillis());
                 sim = (PlayingGround)state;
                 start();
+
+
+
+
             }
 
 

@@ -5,6 +5,8 @@ import sim.engine.*;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
 
+import java.util.ArrayList;
+
 public class PlayingGround extends SimState {
     //Spielerzahl, sollte über die Konsole verändert werden können
     public long seed;
@@ -26,6 +28,7 @@ public class PlayingGround extends SimState {
     public int six_counter = 0;
     public int fieldWidth = 15;
     public int fieldHeight = 15;
+    public ArrayList<String> placements = new ArrayList<>();
 
     // Spielerparameter werden initialisert, strategies und name  optional später über UI konfigurierbar 
     public String[] strategies = {"random","random", "random","random"};
@@ -162,5 +165,10 @@ public class PlayingGround extends SimState {
             if (rolls[i]>rolls[largest]) largest = i;
         }
         return largest; // position of the first largest found
+    }
+
+    public int determinePlacement(String player_name) {
+        placements.add(player_name);
+        return placements.size();
     }
 }
