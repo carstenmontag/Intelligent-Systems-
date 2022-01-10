@@ -166,7 +166,7 @@ public boolean scanForBlock() {
     // loop through array
     for (int i=0; i<toScan.length-1; i++) {
         int scanning = toScan[i];
-        System.out.println("Scanning Position " + scanning);
+        //System.out.println("Scanning Position " + scanning);
         int numPieces = field_copy.numObjectsAtLocation(PlayingGround.locations[scanning].getX(), PlayingGround.locations[scanning].getY());
 
         if (numPieces ==2) {

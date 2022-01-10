@@ -58,6 +58,9 @@ public class Player implements Steppable {
             Move move = determineMove(PossibleMoves);
             System.out.println("Move " + move.originx + " --> " + move.targetx + " Player : "+ playerIndex+ " Piece :" + move.piece.PieceIndex);
             move.executeMove();
+            for(GamePiece piece : AtStartPieces){
+                System.out.print("Piece "+ piece.PieceIndex+ " block status : "+ piece.blocks);
+            }
             gameboard.redraw_images = move.redraw_images;
 
             //Überprüfe ob alle Pieces des Spielers done sind
