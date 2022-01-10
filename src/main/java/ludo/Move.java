@@ -137,13 +137,13 @@ public boolean scanForBlock() {
         if (piece.finish != 0) {
             toScan = new int[piece.finish-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = (originx+i+1)%52;
+                toScan[i] = originx+i;
             }
         }
         else{ 
-            toScan = new int[(52-originx)+1];
+            toScan = new int[(52-originx)];
             for(int i = 0; i<toScan.length-1;i++){
-                int next = (originx+i+1)%52;
+                int next = (originx+i)%52;
                 toScan[i] = next;
             }
         }
@@ -152,14 +152,14 @@ public boolean scanForBlock() {
         if (originx>targetx){
             toScan = new int[(targetx+52)-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = (originx+i+1)%52 ;
+                toScan[i] = (originx+i)%52 ;
 
             }
         }
         else {
             toScan = new int[targetx-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = originx+i+1;
+                toScan[i] = originx+i;
             }
         }
     }       
