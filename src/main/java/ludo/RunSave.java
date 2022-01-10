@@ -2,13 +2,13 @@ package ludo;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
-import java.io.File;
 
-public class SaveObject {
+
+public class RunSave {
     String filepath; 
-    String[][] stats;
-    
-    public SaveObject(String filepath){
+    GameSave[] stats;
+
+    public RunSave(String filepath){
         this.filepath = filepath;
     }
     public void writeColumnsToCSV(String[] columns){
@@ -32,7 +32,7 @@ public class SaveObject {
     }
    public static void main(String[] args) {
     String[] test = {"1","2","3"};   
-    SaveObject so = new SaveObject("test.csv");
+    RunSave so = new RunSave("test.csv");
     so.writeRowToCSV(test);
         
     }

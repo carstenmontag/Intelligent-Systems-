@@ -25,8 +25,8 @@ public class GUI extends GUIState {
     public int current_player = 0;
     public Console c;
     public PlayingGround emptyPlayingGround ;
-
-    String strats[][];
+    String strategy_options[] = {};
+    String strat_combinations[][];
 
     Image redImage = new ImageIcon("src/main/resources/RedPiece.png").getImage();
     Image blueImage = new ImageIcon("src/main/resources/BluePiece.png").getImage();
