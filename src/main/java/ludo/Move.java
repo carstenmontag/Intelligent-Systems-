@@ -213,7 +213,7 @@ public boolean canFinish(){
     if (!inFinishCorridor()) {return false;}
     else {
         int target = originx + roll;
-        if (piece.finish == 0){ target = target-52; }
+        if (piece.finish == 0){ target = target%52; }
         if (target > piece.finish&& target <= piece.finish + 6){return true;}
         return false;
     }
