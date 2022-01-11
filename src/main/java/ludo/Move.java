@@ -67,8 +67,10 @@ public boolean movePossible(){
         if (canFinish()){
             return !scanHomeColumnBlock()&&!scanForBlock(); ////// unsicher ? war schon geändert als ich heute angefangen hab, keiner Erinnerung mehr dran
         }
+        ////// NULLPOINTER HIER !!!!!! 
         int target = originx + roll ;
-        return target <= last_possible_finish;
+        return (target <= last_possible_finish)&&!scanForBlock() ; // eventueller Fix, einfach scannen 
+        ///////////////
     }
     else if (piece.hasfinished) {
         return targetx <= last_possible_finish && !scanHomeColumnBlock();
@@ -140,13 +142,13 @@ public boolean scanForBlock() {
         if (piece.finish != 0) {
             toScan = new int[piece.finish-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = originx+i;
+                toScan[i] = (originx+i+1)%52;
             }
         }
         else{ 
-            toScan = new int[(52-originx)];
+            toScan = new int[(52-originx)+1];
             for(int i = 0; i<toScan.length-1;i++){
-                int next = (originx+i)%52;
+                int next = (originx+i+1)%52;
                 toScan[i] = next;
             }
         }
@@ -155,23 +157,24 @@ public boolean scanForBlock() {
         if (originx>targetx){
             toScan = new int[(targetx+52)-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = (originx+i)%52 ;
+                toScan[i] = (originx+i+1)%52 ;
 
             }
         }
         else {
             toScan = new int[targetx-originx];
             for(int i = 0; i<toScan.length-1;i++){
-                toScan[i] = originx+i;
+                toScan[i] = originx+i+1;
             }
         }
     }       
     // loop through array
+    System.out.print("Scanning");
     for (int i=0; i<toScan.length-1; i++) {
         int scanning = toScan[i];
         //System.out.println("Scanning Position " + scanning);
         int numPieces = field_copy.numObjectsAtLocation(PlayingGround.locations[scanning].getX(), PlayingGround.locations[scanning].getY());
-
+        System.out.println("Pieces at position " + scanning +" :" + numPieces);
         if (numPieces ==2) {
             Bag Pieces = (Bag) field_copy.getObjectsAtLocation(PlayingGround.locations[scanning]);
 
@@ -268,7 +271,6 @@ public void block(){
     blocks_with.blocks = true;
     redraw_images = true;
 }
-
 public void moveOnField(){
     piece.set_to_field_loc(targetx);
     if (piece.blocks){resolve_block();}
