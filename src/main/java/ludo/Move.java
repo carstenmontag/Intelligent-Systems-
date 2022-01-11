@@ -35,7 +35,10 @@ public int determineTarget(){
         int target = originx +roll;
         int finishIndex = 9999;
         if (piece.finish == 0) {
-            finishIndex = target-piece.finish-1;
+            finishIndex = target-1;
+            if (originx == 0){
+                finishIndex = 51+roll;
+            }
             finish = finishIndex-52;
         }
         else {
