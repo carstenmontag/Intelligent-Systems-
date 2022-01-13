@@ -23,16 +23,19 @@ public class GameOverlay extends FieldPortrayal2D {
         graphics.setFont(font);
         graphics.setColor(Color.black);
 
-        Rectangle2D bounds = new TextLayout("" + sim.numGames, font, graphics.getFontRenderContext()).getBounds();
+        Rectangle2D bounds = new TextLayout("" + ui.num_of_games, font, graphics.getFontRenderContext()).getBounds();
 
         if (firstTimeNumG == 1) {
             firstTimeNumG = (int)((GUTTER + bounds.getHeight()) / 2);
         }
 
-        graphics.drawString("Game: " + sim.numGames, BORDER, firstTimeNumG);
-        graphics.drawString("Player 1: " + sim.players[0].name, (int)((info.clip.width - BORDER * 2) * 1 / 3 + BORDER), firstTimeNumG);
+        graphics.drawString("Num Game: " + ui.num_of_games, BORDER, firstTimeNumG);
+        graphics.drawString("Game in Comb: " + ui.game_in_comb, (int)((info.clip.width - BORDER * 2) * 1 / 3 + BORDER), firstTimeNumG);
+        graphics.drawString("Current Comb: " + ui.current_comb, (int)((info.clip.width - BORDER * 2) * 2 / 3 + BORDER), firstTimeNumG);
+
+
+        //graphics.drawString("Player 1: " + sim.players[0].name, (int)((info.clip.width - BORDER * 2) * 1 / 3 + BORDER), firstTimeNumG);
         //graphics.drawString("Wins: " + sim.players[0].win, (int)((info.clip.width - BORDER * 2) * 2 / 3 + BORDER), firstTimeNumG);
 
     }
-
 }

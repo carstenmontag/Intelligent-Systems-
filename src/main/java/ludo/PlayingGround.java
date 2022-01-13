@@ -11,6 +11,7 @@ public class PlayingGround extends SimState {
     //Spielerzahl, sollte über die Konsole verändert werden können
     public long seed;
     public int numPlayers = 4;
+
     public int test_steps = 2;
 
     //Strategie eines Spielers, sollte über die Konsole verändert werden können
@@ -19,8 +20,7 @@ public class PlayingGround extends SimState {
     //peaceful = Die Figuren werden gleichmäßig verteilt
 
     //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
-    public boolean game_over = false;
-    public int numGames = 1;
+
     public boolean redraw_images = false;
     public int[] strats = {0, 1, 2, 3};
     public SparseGrid2D field;
@@ -31,7 +31,7 @@ public class PlayingGround extends SimState {
     public ArrayList<String> placements = new ArrayList<>();
 
     // Spielerparameter werden initialisert, strategies und name  optional später über UI konfigurierbar 
-    public String[] strategies = {"random","random", "random","random"};
+    public String[] strategies = {"random1","random2", "random3","random4"};
     // Start wenn eine 6 gewürfelt wurde, sowohl als 2d, als auch 1d Punkt
     public int[] FigureStarts = {2,15,28,41};
     public int[] FigureFinishes = {0,13,26,39};

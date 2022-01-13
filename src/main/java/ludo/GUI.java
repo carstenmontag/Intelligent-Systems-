@@ -18,16 +18,19 @@ public class GUI extends GUIState {
     public Display2D display;
     public JFrame displayFrame;
     public PlayingGround sim;
-    public Controller con;
     SparseGridPortrayal2D boardPortrayal = new SparseGridPortrayal2D();
-    public int num_players = 4;
-    public int steps_per_sim = 3;
-    public int sims = 1;
     public int current_player = 0;
     public Console c;
-    public PlayingGround emptyPlayingGround ;
-    String strategy_options[] = {};
-    String strat_combinations[][];
+
+    // TODO bei strat_combinations. hardcoding durch automatische generation ersetzen
+    public String[][] strat_combinations = {{"random1","random2", "random3","random4"}, {"random4","random3", "random2","random1"}};
+
+    public boolean game_over = false;
+    public int num_of_games = 0;
+
+    public int games_per_comb = 5; // Gibt an wie viele Spiele per Kombination gespielt werden
+    public int game_in_comb = 0; // Gibt an wie viele Spiele in der aktuellen Kombination gespielt wurden
+    public int current_comb = 1; // Gibt aktuelle Kombination an
 
     Image redImage = new ImageIcon("src/main/resources/RedPiece.png").getImage();
     Image blueImage = new ImageIcon("src/main/resources/BluePiece.png").getImage();
@@ -47,6 +50,7 @@ public class GUI extends GUIState {
         GUI vid = new GUI(baseGround);
        
     }
+
     public GUI(PlayingGround baseGround){
         
         super(baseGround);
@@ -77,9 +81,16 @@ public class GUI extends GUIState {
         state.schedule.scheduleOnce(0,0,sim.players[0]);
     
         System.out.println("Figures on the field :" + sim.field.getAllObjects().size());
-            
-        
+
+        // Berechne den aktuellen Stand innerhalb der Kombinationen
+        num_of_games++;
+        game_in_comb++;
+        if (game_in_comb >= games_per_comb) {
+            current_comb++;
+            game_in_comb=0;
+        }
     }
+
     @Override
     public boolean step(){
 
@@ -87,7 +98,13 @@ public class GUI extends GUIState {
         if (current_player == 3){next_player = 0;}
         else{next_player = current_player +1;}
         boolean success = true;
-        if (!sim.game_over){
+
+        // Prüfe ob am Ende der letzen Kombination angekommen
+        if (current_comb > strat_combinations.length) {
+            game_over = true;
+        }
+
+        if (!game_over){
             success = state.schedule.step(state);
 
             // Überprüfe ob Game Beendet ist.
@@ -106,10 +123,6 @@ public class GUI extends GUIState {
                 state = new PlayingGround(System.currentTimeMillis());
                 sim = (PlayingGround)state;
                 start();
-
-
-
-
             }
 
 
@@ -139,7 +152,6 @@ public class GUI extends GUIState {
         // Queue player again
         return success;
     }
-    
 
     public void setupPortrayals() {
         PlayingGround board = (PlayingGround) state;
@@ -154,11 +166,11 @@ public class GUI extends GUIState {
                 boardPortrayal.setPortrayalForObject(board.players[i].AtStartPieces[j], portrayal);
             }
         }
-
         display.reset();
         setBackground();
         display.repaint();
     }
+
     public void init(Controller c) {
         super.init(c);
         display = new Display2D(720,720,this);
