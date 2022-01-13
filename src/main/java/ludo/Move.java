@@ -146,8 +146,9 @@ public boolean scanForBlock() {
                 toScan[i] = (originx+i+1)%52;
             }
         }
-        else{ 
-            toScan = new int[(52-originx)+1];
+        else{
+            if (originx == 0) {return false;}
+            else {toScan = new int[(52-originx)+1];}
             //if (originx == 0) {toScan = new int[targetx-52];} /////// Code Snippet prüfen, scannt das ganze Feld wenn originx == 0
            
             for(int i = 0; i<toScan.length-1;i++){

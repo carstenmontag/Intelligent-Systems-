@@ -75,9 +75,6 @@ public class PlayingGround extends SimState {
     public MersenneTwisterFast rng;
 
     // Methoden für Model-Tab
-    public String getPlayer1() { return names[0]; }
-    public void setPlayer1(String val) { if (!val.equals("")) names[0] = val; }
-
     public String getPlayer2() { return names[1]; }
     public void setPlayer2(String val) { if (!val.equals("")) names[1] = val; }
 
@@ -86,22 +83,6 @@ public class PlayingGround extends SimState {
 
     public String getPlayer4() { return names[3]; }
     public void setPlayer4(String val) { if (!val.equals("")) names[3] = val; }
-
-    public int getStrategiePlayer1() { return strats[0]; }
-    public void setStrategiePlayer1(int val) { if (val <= 3 && val >= 0) strats[0] = val; }
-    public Object domStrategiePlayer1() { return strategies; }
-
-    public int getStrategiePlayer2() { return strats[1]; }
-    public void setStrategiePlayer2(int val) { if (val <= 3 && val >= 0) strats[1] = val; }
-    public Object domStrategiePlayer2() { return strategies; }
-
-    public int getStrategiePlayer3() { return strats[2]; }
-    public void setStrategiePlayer3(int val) { if (val <= 3 && val >= 0) strats[2] = val; }
-    public Object domStrategiePlayer3() { return strategies; }
-
-    public int getStrategiePlayer4() { return strats[3]; }
-    public void setStrategiePlayer4(int val) { if (val <= 3 && val >= 0) strats[3] = val; }
-    public Object domStrategiePlayer4() { return strategies; }
 
     //Das Spielfeld soll wie ein einfaches Array sein, die Spieler spawnen die Figuren an fixen stellen. Falls ein Spieler am Ursprungspunkt-2 ist kommt er auf ein neues kleines array dass die Ziellinie abbildet
     //Spielfeld / Environment / Simulation
@@ -112,8 +93,6 @@ public class PlayingGround extends SimState {
         field = new SparseGrid2D(fieldWidth, fieldHeight);
         createPlayers();
 	}
-
-    
 
     public void createPlayers() {
         //Create the number of players specified in numPlayers
@@ -132,7 +111,6 @@ public class PlayingGround extends SimState {
         for(int i=0;i<players.length;i++){System.out.println("Spieler "+ players[i].name + " Originaler Index" + players[i].playerIndex + " Neuer Index " + i);}
         setOrderDependantVariables();
     }
-    
 
     public Player[] getOrderedPlayers(int IndexHighestRoll) {
         // Höchster Roll --> erster Spieler, alle anderen werden der Sitzreihenfolge nach geordnet 
