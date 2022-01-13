@@ -12,7 +12,6 @@ public class Move {
     public int originx;
     public int targetx;
     public boolean possible;
-    public boolean doesBeat;
     public int finish = 9999;
     public Bag ObjectsAtTarget;
     public boolean canBeat;
@@ -63,15 +62,17 @@ public boolean movePossible(){
     if (piece.finish == 0) {last_possible_finish = 51+6;}
     // case figure at start + target start
     if (targetx == -1 ){return false;}
-    else if (inFinishCorridor()){
-        if (canFinish()){
-            return !scanHomeColumnBlock()&&!scanForBlock(); ////// unsicher ? war schon geändert als ich heute angefangen hab, keiner Erinnerung mehr dran
-        }
-        ////// NULLPOINTER HIER !!!!!! 
-        int target = originx + roll ;
-        return (target <= last_possible_finish)&&!scanForBlock() ; // eventueller Fix, einfach scannen 
-        ///////////////
-    }
+    else if (inFinishCorridor()&&canFinish()){
+        
+        
+        
+        
+        return !scanHomeColumnBlock()&&!scanForBlock(); }
+    
+
+
+
+        
     else if (piece.hasfinished) {
         return targetx <= last_possible_finish && !scanHomeColumnBlock();
     }

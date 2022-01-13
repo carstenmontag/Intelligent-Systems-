@@ -70,7 +70,7 @@ public class PlayingGround extends SimState {
         new Int2D(2,8), new Int2D(1,8), new Int2D(0,8)
     };
 
-    public String[] names = {"Max", "Peter", "Hans", "Heinrich"};
+    public String[] names = {"Observed", "Peter", "Hans", "Heinrich"};
     public Player[] players = new Player[4];
     public MersenneTwisterFast rng;
 
