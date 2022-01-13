@@ -22,10 +22,11 @@ public class GUI extends GUIState {
     public int current_player = 0;
     public Console c;
 
+    public String[] strategies = {"random1","random2", "random3","random4"};
     // TODO bei strat_combinations. hardcoding durch automatische generation ersetzen
-    public String[][] strat_combinations = {{"random1","random2", "random3","random4"}, {"random4","random3", "random2","random1"}};
+    public static String[][] strat_combinations = {{"random1","random2", "random3","random4"}, {"random4","random3", "random2","random1"}};
 
-    public boolean game_over = false;
+    public boolean simulation_over = false;
     public int num_of_games = 0;
 
     public int games_per_comb = 5; // Gibt an wie viele Spiele per Kombination gespielt werden
@@ -46,13 +47,12 @@ public class GUI extends GUIState {
 
     public static void main (String[] args){
         String[] first_strat;
-        PlayingGround baseGround =  new PlayingGround(System.currentTimeMillis());
+        PlayingGround baseGround =  new PlayingGround(System.currentTimeMillis(), strat_combinations[0]);
         GUI vid = new GUI(baseGround);
        
     }
 
     public GUI(PlayingGround baseGround){
-        
         super(baseGround);
         c = new Console(this);
         c.setVisible(true);
@@ -101,15 +101,14 @@ public class GUI extends GUIState {
 
         // Prüfe ob am Ende der letzen Kombination angekommen
         if (current_comb > strat_combinations.length) {
-            game_over = true;
+            simulation_over = true;
         }
 
-        if (!game_over){
+        if (!simulation_over){
             success = state.schedule.step(state);
 
             // Überprüfe ob Game Beendet ist.
             if ((sim.players[0].placement != 0) && (sim.players[1].placement != 0) && (sim.players[2].placement != 0) && (sim.players[3].placement != 0)) {
-                //sim.game_over = true;
 
                 System.out.println(sim.placements);
                 System.out.println(sim.players[0].placement);
@@ -120,11 +119,10 @@ public class GUI extends GUIState {
                 //TODO Daten für Statistiken auslesen
                 sim.finish();
                 //serializeGameResults(sim);
-                state = new PlayingGround(System.currentTimeMillis());
+                state = new PlayingGround(System.currentTimeMillis(), strat_combinations[current_comb-1]);
                 sim = (PlayingGround)state;
                 start();
             }
-
 
             // iterate through all GamePieces of the current Player and check if any have to be repainted
             if (sim.redraw_images){

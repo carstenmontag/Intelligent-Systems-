@@ -6,6 +6,7 @@ import sim.portrayal.FieldPortrayal2D;
 import java.awt.*;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
+//import java.util.Arrays;
 
 public class GameOverlay extends FieldPortrayal2D {
 
@@ -33,7 +34,7 @@ public class GameOverlay extends FieldPortrayal2D {
         graphics.drawString("Game in Comb: " + ui.game_in_comb, (int)((info.clip.width - BORDER * 2) * 1 / 3 + BORDER), firstTimeNumG);
         graphics.drawString("Current Comb: " + ui.current_comb, (int)((info.clip.width - BORDER * 2) * 2 / 3 + BORDER), firstTimeNumG);
 
-
+        //graphics.drawString("Strats: " + Arrays.toString(GUI.strat_combinations[ui.current_comb-1]), BORDER, firstTimeNumG);
         //graphics.drawString("Player 1: " + sim.players[0].name, (int)((info.clip.width - BORDER * 2) * 1 / 3 + BORDER), firstTimeNumG);
         //graphics.drawString("Wins: " + sim.players[0].win, (int)((info.clip.width - BORDER * 2) * 2 / 3 + BORDER), firstTimeNumG);
 

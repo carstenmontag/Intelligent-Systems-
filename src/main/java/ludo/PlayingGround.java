@@ -22,7 +22,7 @@ public class PlayingGround extends SimState {
     //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
 
     public boolean redraw_images = false;
-    public int[] strats = {0, 1, 2, 3};
+    //public int[] strats = {0, 1, 2, 3};
     public SparseGrid2D field;
     public int current_roll ;
     public int six_counter = 0;
@@ -30,8 +30,9 @@ public class PlayingGround extends SimState {
     public int fieldHeight = 15;
     public ArrayList<String> placements = new ArrayList<>();
 
-    // Spielerparameter werden initialisert, strategies und name  optional später über UI konfigurierbar 
-    public String[] strategies = {"random1","random2", "random3","random4"};
+    // Spielerparameter werden initialisert, name optional später über UI konfigurierbar
+    public String[] strategies;
+
     // Start wenn eine 6 gewürfelt wurde, sowohl als 2d, als auch 1d Punkt
     public int[] FigureStarts = {2,15,28,41};
     public int[] FigureFinishes = {0,13,26,39};
@@ -86,11 +87,12 @@ public class PlayingGround extends SimState {
 
     //Das Spielfeld soll wie ein einfaches Array sein, die Spieler spawnen die Figuren an fixen stellen. Falls ein Spieler am Ursprungspunkt-2 ist kommt er auf ein neues kleines array dass die Ziellinie abbildet
     //Spielfeld / Environment / Simulation
-    public PlayingGround(long seed) {
+    public PlayingGround(long seed, String[] strats) {
 		super(seed);
         this.seed = seed;	
         this.rng = new MersenneTwisterFast(this.seed);
         field = new SparseGrid2D(fieldWidth, fieldHeight);
+        this.strategies = strats;
         createPlayers();
 	}
 
