@@ -14,11 +14,6 @@ public class PlayingGround extends SimState {
 
     public int test_steps = 2;
 
-    //Strategie eines Spielers, sollte über die Konsole verändert werden können
-    //random = Alle Aktionen zufällig
-    //aggressive = Es sollten nur wenige Figuren im Spiel sein, diese sollten sich schnell bewegen um andere Spiele einzuholen und rauszuwerfen
-    //peaceful = Die Figuren werden gleichmäßig verteilt
-
     //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
 
     public boolean redraw_images = false;

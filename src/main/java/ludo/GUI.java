@@ -1,13 +1,11 @@
 package ludo;
 
-import sim.engine.*;
 import sim.display.*;
 import sim.portrayal.Inspector;
 import sim.portrayal.SimplePortrayal2D;
 import sim.portrayal.grid.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import javax.swing.*;
 
 import sim.portrayal.simple.FacetedPortrayal2D;
@@ -22,9 +20,13 @@ public class GUI extends GUIState {
     public int current_player = 0;
     public Console c;
 
-    public String[] strategies = {"random1","random2", "random3","random4"};
-    // TODO bei strat_combinations. hardcoding durch automatische generation ersetzen
-    public static String[][] strat_combinations = {{"random1","random2", "random3","random4"}, {"random4","random3", "random2","random1"}};
+    // Strategien
+    //First = Bewege priorisiert die Figur, die am nächsten am Ziel ist.
+    //Last = Bewege priorisiert die Figur, die am weitesten weg com Ziel ist.
+    //Prefer_Block = Bewege priorisiert die Figur, die einen Block verursachen kann
+    //Prefer_Beat = Bewege priorisiert die Figur, die einen anderen Spieler schlagen kann
+    public static String[] strategies = {"First","Last","Prefer_Block","Prefer_Beat"};
+    public static String[][] strat_combinations;
 
     public boolean simulation_over = false;
     public int num_of_games = 0;
@@ -46,16 +48,23 @@ public class GUI extends GUIState {
     public Image[] roadblock_images = {greenImageBlock, redImageBlock, blueImageBlock, yellowImageBlock};
 
     public static void main (String[] args){
-        String[] first_strat;
+        CSVHandler so = new CSVHandler();
+        int[][] int_combinations = so.readRowsFromCSV("src/main/resources/strategy_combinations.csv");
+        strat_combinations = new String[int_combinations.length][int_combinations[0].length];
+
+        for(int i=0; i<=int_combinations.length-1; i++) {
+            strat_combinations[i] = indices_to_strats(int_combinations[i]);
+        }
+
         PlayingGround baseGround =  new PlayingGround(System.currentTimeMillis(), strat_combinations[0]);
         GUI vid = new GUI(baseGround);
-       
     }
 
     public GUI(PlayingGround baseGround){
         super(baseGround);
         c = new Console(this);
         c.setVisible(true);
+
         System.out.println("GUI Construct");
     }
 
@@ -199,4 +208,9 @@ public class GUI extends GUIState {
         g.dispose();
         display.setBackdrop(new TexturePaint(b, new Rectangle(0,0,i.getWidth(null),i.getHeight(null))));
     }
+
+    public static String[] indices_to_strats(int[] indices) {
+        return new String[]{strategies[indices[0]], strategies[indices[1]], strategies[indices[2]], strategies[indices[3]]};
+    }
+
 }
