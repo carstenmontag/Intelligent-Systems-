@@ -4,13 +4,15 @@ import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class CSVHandler {
-    GameSave[] stats;
+    GameSave[] games_this_comb;
 
-    //public void writeColumnsToCSV(String[] columns){writeRowToCSV(columns);}
-
+    public CSVHandler(int games_per_comb){
+        this.games_this_comb = new GameSave[games_per_comb];
+    }
     public void writeRowToCSV(String[] row, String filepath){
         try{
             FileWriter fw = new FileWriter(filepath,true);
@@ -49,23 +51,35 @@ public class CSVHandler {
                 result[counter] = res;
                 counter++;
             }
-
+            br.close();
         } catch (Exception e){}
 
         return result;
     }
-
-    public static void main(String[] args) {
-        String[] test = {"1","2","3"};
-        CSVHandler so = new CSVHandler();
-        so.writeRowToCSV(test, "test.csv");
-
-        int[][] res = so.readRowsFromCSV("src/main/resources/strategy_combinations.csv");
-
-        for (int[] r: res) {
-            System.out.println(Arrays.toString(r));
+    public void add_comb(){
+        
+    }
+    public void add_run(ArrayList<Move> current_game, int current_index, int placement ){
+        int number_of_blocks = 0;
+        int number_of_kicks = 0;
+        int number_of_moves = 0;
+        int number_has_been_kicked = 0;
+        int game_duration = current_game.size();
+        System.out.println("Start iteration over moves");
+        Iterator<Move> it = current_game.iterator();
+        while(it.hasNext()){
+            Move current_move = (Move)it.next();
+            if (current_move.playerName.equals("Observed")){
+                if (current_move.canBeat){number_of_kicks++;}
+                if (current_move.canBlock){number_of_blocks++;}
+                number_of_moves++;
+            }
+            else{
+                if (current_move.canBeat && current_move.playerBeaten.equals("Observed")){number_has_been_kicked++;} 
+            }
         }
-
+        System.out.println("Current Index :" + current_index);
+        games_this_comb[current_index-1]= new GameSave(number_of_blocks,number_of_kicks,number_of_moves,number_has_been_kicked,placement,game_duration);
     }
 
 }

@@ -58,6 +58,8 @@ public class Player implements Steppable {
             Move move = determineMove(PossibleMoves);
             System.out.println("Move " + move.originx + " --> " + move.targetx + " Player : "+ playerIndex+ " Piece :" + move.piece.PieceIndex);
             move.executeMove();
+            gameboard.setExecutedMove(move);
+
             for(GamePiece piece : AtStartPieces){
                 System.out.print("Piece "+ piece.PieceIndex+ " block status : "+ piece.blocks);
             }
@@ -68,6 +70,9 @@ public class Player implements Steppable {
                 placement = gameboard.determinePlacement(name);
             }
         }
+        else{
+            gameboard.setExecutedMove(null);
+        }
     }
 
     // mögliche Züge werden in der Form eines Objektes dargestellt
@@ -77,7 +82,7 @@ public class Player implements Steppable {
         int possible_counter = 0;
         Move[] moves = new Move[4];
         for(int i = 0; i<AtStartPieces.length; i++){
-            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, tempBoard);
+            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, name, tempBoard);
             if (move.possible){possible_counter++;}
             moves[i] = move;
         }
@@ -94,14 +99,16 @@ public class Player implements Steppable {
 
     public Move determineMove(Move[] moves){
         //Strategien implementieren
-        // random decision
+        // random decision default
+        // implemented tactics are executed in switch case statement
        
-       /* switch (strategy){
-        case "random":  System.out.println("test");
+        switch (strategy){
+        case "random":  
+            System.out.println("test");
+        default : 
+            int rndint = randomGenerator.nextInt(moves.length);
+            return moves[rndint];
         }
-        */
-        int rndint = randomGenerator.nextInt(moves.length);
-        return moves[rndint];
     }
     public void setOrderDependantVariables(int start, int finish, Int2D[] spawns, Int2D[] finish_line, int playerIndex){
         this.start = start;
@@ -116,7 +123,7 @@ public class Player implements Steppable {
         //Die Figuren sollen auf pro Spieler Basis existieren, ist das möglich? Vielleicht die Figuren als einfache Attribute
         //Oder die Figuren als Objekte in der Simulationsenvironment, wäre vermutlich sinnvoll
         for(int i = 0;i<=AtStartPieces.length-1;i++){
-            AtStartPieces[i] = new GamePiece(playerIndex,start,finish,i, two_d_spawns[i],two_d_finish_line,tempBoard);
+            AtStartPieces[i] = new GamePiece(playerIndex,start,finish,i, two_d_spawns[i],two_d_finish_line,name,tempBoard);
             AtStartPieces[i].set_to_spawn();
         }
     }

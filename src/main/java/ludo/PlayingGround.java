@@ -17,14 +17,13 @@ public class PlayingGround extends SimState {
     //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
 
     public boolean redraw_images = false;
-    //public int[] strats = {0, 1, 2, 3};
     public SparseGrid2D field;
     public int current_roll ;
     public int six_counter = 0;
     public int fieldWidth = 15;
     public int fieldHeight = 15;
     public ArrayList<String> placements = new ArrayList<>();
-
+    public Move move_this_turn;
     // Spielerparameter werden initialisert, name optional später über UI konfigurierbar
     public String[] strategies;
 
@@ -126,7 +125,9 @@ public class PlayingGround extends SimState {
         }
         return ordered;
     }
-
+    public void setExecutedMove(Move executed_move){
+        move_this_turn = executed_move;
+    }
     public void setOrderDependantVariables() {
         for(int i = 0; i<this.numPlayers; i++){
             players[i].setOrderDependantVariables(FigureStarts[i],FigureFinishes[i],two_d_spawns[i], two_d_finish_line[i],i );

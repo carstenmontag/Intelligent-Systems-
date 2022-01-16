@@ -17,12 +17,15 @@ public class Move {
     public boolean canBeat;
     public boolean canBlock;
     public boolean redraw_images;
+    public String playerName;
+    public String playerBeaten = "";
 
-public Move(GamePiece piece, int roll, GamePiece[] start_field, SparseGrid2D field_copy){
+public Move(GamePiece piece, int roll, GamePiece[] start_field, String playerName, SparseGrid2D field_copy){
     this.piece = piece;
     this.field_copy = field_copy;
     this.start_field = start_field;
     this.roll = roll;
+    this.playerName = playerName;
     originx = piece.positionx;
     targetx = determineTarget();
     possible = movePossible();
@@ -63,16 +66,7 @@ public boolean movePossible(){
     // case figure at start + target start
     if (targetx == -1 ){return false;}
     else if (inFinishCorridor()&&canFinish()){
-        
-        
-        
-        
         return !scanHomeColumnBlock()&&!scanForBlock(); }
-    
-
-
-
-        
     else if (piece.hasfinished) {
         return targetx <= last_possible_finish && !scanHomeColumnBlock();
     }
@@ -87,6 +81,10 @@ public boolean movePossible(){
         }
         else {
             canBeat = true;
+            GamePiece toBeat= (GamePiece)ObjectsAtTarget.get(0);
+            playerBeaten = toBeat.playerName;
+
+            
         }
         return true;
     }

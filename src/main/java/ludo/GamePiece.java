@@ -13,6 +13,7 @@ public class GamePiece{
     public int start;
     public int finish;
     public int PieceIndex;
+    public String playerName;
 
     public boolean hasfinished = false;
     public boolean done = false;
@@ -22,8 +23,9 @@ public class GamePiece{
     public SparseGrid2D field;
     public int[] corridor = new int[6];
 
-    public GamePiece(int ownerIndex, int start, int finish, int PieceIndex, Int2D spawn, Int2D[] finish_line, SparseGrid2D field){
+    public GamePiece(int ownerIndex, int start, int finish, int PieceIndex, Int2D spawn, Int2D[] finish_line, String playerName, SparseGrid2D field){
         this.ownerIndex = ownerIndex;
+        this.playerName = playerName;
         this.start = start;
         this.finish = finish;
         this.PieceIndex = PieceIndex;

@@ -6,6 +6,9 @@ import sim.portrayal.SimplePortrayal2D;
 import sim.portrayal.grid.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.*;
 
 import sim.portrayal.simple.FacetedPortrayal2D;
@@ -31,7 +34,7 @@ public class GUI extends GUIState {
     public boolean simulation_over = false;
     public int num_of_games = 0;
 
-    public int games_per_comb = 5; // Gibt an wie viele Spiele per Kombination gespielt werden
+    public static int games_per_comb = 2; // Gibt an wie viele Spiele per Kombination gespielt werden
     public int game_in_comb = 0; // Gibt an wie viele Spiele in der aktuellen Kombination gespielt wurden
     public int current_comb = 1; // Gibt aktuelle Kombination an
 
@@ -46,9 +49,12 @@ public class GUI extends GUIState {
     Image yellowImageBlock = new ImageIcon("src/main/resources/YellowPieceBlock.png").getImage();
     Image greenImageBlock = new ImageIcon("src/main/resources/GreenPieceBlock.png").getImage();
     public Image[] roadblock_images = {greenImageBlock, redImageBlock, blueImageBlock, yellowImageBlock};
+    
+    public ArrayList<Move> moves_this_game = new ArrayList<Move>();
+    public CSVHandler so;
 
     public static void main (String[] args){
-        CSVHandler so = new CSVHandler();
+        CSVHandler so = new CSVHandler(games_per_comb);
         int[][] int_combinations = so.readRowsFromCSV("src/main/resources/strategy_combinations.csv");
         strat_combinations = new String[int_combinations.length][int_combinations[0].length];
 
@@ -57,14 +63,14 @@ public class GUI extends GUIState {
         }
 
         PlayingGround baseGround =  new PlayingGround(System.currentTimeMillis(), strat_combinations[0]);
-        GUI vid = new GUI(baseGround);
+        GUI vid = new GUI(baseGround,so);
     }
 
-    public GUI(PlayingGround baseGround){
+    public GUI(PlayingGround baseGround, CSVHandler so){
         super(baseGround);
         c = new Console(this);
         c.setVisible(true);
-
+        this.so = so;
         System.out.println("GUI Construct");
     }
 
@@ -96,7 +102,7 @@ public class GUI extends GUIState {
         game_in_comb++;
         if (game_in_comb >= games_per_comb) {
             current_comb++;
-            game_in_comb=0;
+            //so.add_run(current_game, current_index);
         }
     }
 
@@ -115,19 +121,18 @@ public class GUI extends GUIState {
 
         if (!simulation_over){
             success = state.schedule.step(state);
+            if (sim.move_this_turn != null){
+                moves_this_game.add(sim.move_this_turn);
 
+            }
             // Überprüfe ob Game Beendet ist.
             if ((sim.players[0].placement != 0) && (sim.players[1].placement != 0) && (sim.players[2].placement != 0) && (sim.players[3].placement != 0)) {
-
-                System.out.println(sim.placements);
-                System.out.println(sim.players[0].placement);
-                System.out.println(sim.players[1].placement);
-                System.out.println(sim.players[2].placement);
-                System.out.println(sim.players[3].placement);
-
                 //TODO Daten für Statistiken auslesen
                 sim.finish();
-                //serializeGameResults(sim);
+                so.add_run(moves_this_game, game_in_comb, sim.placements.indexOf("Observed"));
+                if(game_in_comb == games_per_comb){game_in_comb = 0;}
+                moves_this_game.clear();
+
                 state = new PlayingGround(System.currentTimeMillis(), strat_combinations[current_comb-1]);
                 sim = (PlayingGround)state;
                 start();
