@@ -6,8 +6,9 @@ import sim.portrayal.SimplePortrayal2D;
 import sim.portrayal.grid.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 
 import javax.swing.*;
 
@@ -34,7 +35,7 @@ public class GUI extends GUIState {
     public boolean simulation_over = false;
     public int num_of_games = 0;
 
-    public static int games_per_comb = 2; // Gibt an wie viele Spiele per Kombination gespielt werden
+    public static int games_per_comb = 5; // Gibt an wie viele Spiele per Kombination gespielt werden
     public int game_in_comb = 0; // Gibt an wie viele Spiele in der aktuellen Kombination gespielt wurden
     public int current_comb = 1; // Gibt aktuelle Kombination an
 
@@ -54,7 +55,12 @@ public class GUI extends GUIState {
     public CSVHandler so;
 
     public static void main (String[] args){
-        CSVHandler so = new CSVHandler(games_per_comb);
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        CSVHandler so = new CSVHandler(timeStamp);
+        String[] headine = {"Winrate", "Average Placement", "Average Turns per Game", "Turns to Finish",
+                "Average Blocks Created", "Average Kicks", "Average got Kicked"};
+        so.writeRowToCSV(headine, timeStamp+".csv");
+
         int[][] int_combinations = so.readRowsFromCSV("src/main/resources/strategy_combinations.csv");
         strat_combinations = new String[int_combinations.length][int_combinations[0].length];
 
@@ -102,7 +108,7 @@ public class GUI extends GUIState {
         game_in_comb++;
         if (game_in_comb >= games_per_comb) {
             current_comb++;
-            //so.add_run(current_game, current_index);
+            so.add_comb();
         }
     }
 

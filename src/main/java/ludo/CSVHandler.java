@@ -9,6 +9,11 @@ import java.util.Iterator;
 
 public class CSVHandler {
     ArrayList<GameSave> games_this_comb = new ArrayList<GameSave>();
+    public String filename;
+
+    public CSVHandler(String timeStamp) {
+        this.filename = timeStamp+".csv";
+    }
 
     public void writeRowToCSV(String[] row, String filepath){
         try{
@@ -53,10 +58,12 @@ public class CSVHandler {
 
         return result;
     }
+
     public void add_comb(){
+        String[] calcs = new String[7];
         // TODO null Turns werden noch nicht gezählt
         // stats to calculate
-        int games = games_this_comb.size();
+        double games = games_this_comb.size();
         double win_rate;
         double turns_to_finish;
         double average_placement;
@@ -86,7 +93,7 @@ public class CSVHandler {
             turns_observed_total += currentGame.number_of_moves;
             blocks_total += currentGame.number_of_blocks;
             got_kicked_total += currentGame.number_has_been_kicked;
-            kicked_total += currentGame.number_has_been_kicked;
+            kicked_total += currentGame.number_of_kicks;
             if (currentGame.placement == 1){games_won++;}
             if (game_most_blocks<currentGame.number_of_blocks){game_most_blocks = currentGame.number_of_blocks;}
             if (game_most_kicks<currentGame.number_of_kicks){game_most_kicks = currentGame.number_of_kicks;}
@@ -94,13 +101,29 @@ public class CSVHandler {
         }
         
         win_rate = games_won/games;
+        calcs[0] = Double.toString(win_rate);
+
         average_placement = sum_placement/games;
+        calcs[1] = Double.toString(average_placement);
+
         average_turns_per_game = game_durations_sum/games;
+        calcs[2] = Double.toString(average_turns_per_game);
+
         turns_to_finish = turns_observed_total/games;
+        calcs[3] = Double.toString(turns_to_finish);
+
         average_blocks_created = blocks_total/games;
+        calcs[4] = Double.toString(average_blocks_created);
+
         average_kicks = kicked_total/games;
+        calcs[5] = Double.toString(average_kicks);
+
         average_got_kicked = got_kicked_total/games;
+        calcs[6] = Double.toString(average_got_kicked);
+
+        writeRowToCSV(calcs, filename);
     }
+
     public void add_run(ArrayList<Move> current_game, int current_index, int placement ){
         int number_of_blocks = 0;
         int number_of_kicks = 0;
@@ -123,5 +146,4 @@ public class CSVHandler {
         System.out.println("Current Index :" + current_index);
         games_this_comb.add(new GameSave(number_of_blocks,number_of_kicks,number_of_moves,number_has_been_kicked,placement+1,game_duration));
     }
-
 }
