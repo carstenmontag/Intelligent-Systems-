@@ -12,12 +12,12 @@ public class CSVHandler {
     public String filename;
 
     public CSVHandler(String timeStamp) {
-        this.filename = timeStamp+".csv";
+        this.filename = "results/"+timeStamp+".csv";
     }
 
-    public void writeRowToCSV(String[] row, String filepath){
+    public void writeRowToCSV(String[] row){
         try{
-            FileWriter fw = new FileWriter(filepath,true);
+            FileWriter fw = new FileWriter(filename,true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
             String row_string = null;
@@ -121,7 +121,8 @@ public class CSVHandler {
         average_got_kicked = got_kicked_total/games;
         calcs[6] = Double.toString(average_got_kicked);
 
-        writeRowToCSV(calcs, filename);
+        writeRowToCSV(calcs);
+        games_this_comb.clear();
     }
 
     public void add_run(ArrayList<Move> current_game, int current_index, int placement ){

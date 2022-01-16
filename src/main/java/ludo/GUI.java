@@ -59,7 +59,7 @@ public class GUI extends GUIState {
         CSVHandler so = new CSVHandler(timeStamp);
         String[] headine = {"Winrate", "Average Placement", "Average Turns per Game", "Turns to Finish",
                 "Average Blocks Created", "Average Kicks", "Average got Kicked"};
-        so.writeRowToCSV(headine, timeStamp+".csv");
+        so.writeRowToCSV(headine);
 
         int[][] int_combinations = so.readRowsFromCSV("src/main/resources/strategy_combinations.csv");
         strat_combinations = new String[int_combinations.length][int_combinations[0].length];
