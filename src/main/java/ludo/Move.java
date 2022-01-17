@@ -1,5 +1,7 @@
 package ludo;
 
+import java.util.Comparator;
+
 import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
 import sim.util.Bag;
@@ -30,7 +32,6 @@ public Move(GamePiece piece, int roll, GamePiece[] start_field, String playerNam
     targetx = determineTarget();
     possible = movePossible();
 }
-
 public int determineTarget(){
     if (originx == -1 && roll != 6){return -1;}
     if(inFinishCorridor()&&canFinish()){

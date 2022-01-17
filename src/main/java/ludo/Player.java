@@ -3,6 +3,12 @@ package ludo;
 import sim.engine.*;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import ec.util.*;
 
 public class Player implements Steppable {
@@ -55,7 +61,9 @@ public class Player implements Steppable {
         Move[] PossibleMoves = getPossibleMoves(eyesThisMove);
         System.out.println("Possible moves : " + PossibleMoves.length);
         if (PossibleMoves.length>0) {
-            Move move = determineMove(PossibleMoves);
+            Move move;
+            if (PossibleMoves.length==1){move = PossibleMoves[0];}
+            else{move = determineMove(PossibleMoves);}
             System.out.println("Move " + move.originx + " --> " + move.targetx + " Player : "+ playerIndex+ " Piece :" + move.piece.PieceIndex);
             move.executeMove();
             gameboard.setExecutedMove(move);
@@ -64,7 +72,6 @@ public class Player implements Steppable {
                 System.out.print("Piece "+ piece.PieceIndex+ " block status : "+ piece.blocks);
             }
             gameboard.redraw_images = move.redraw_images;
-
             //Überprüfe ob alle Pieces des Spielers done sind
             if (AtStartPieces[0].done && AtStartPieces[1].done && AtStartPieces[2].done && AtStartPieces[3].done) {
                 placement = gameboard.determinePlacement(name);
@@ -101,10 +108,12 @@ public class Player implements Steppable {
         //Strategien implementieren
         // random decision default
         // implemented tactics are executed in switch case statement
-       
+        ArrayList<Move> movesArrayList = new ArrayList<Move>(Arrays.asList(moves));
+        Strategies comparators = new Strategies(); 
         switch (strategy){
-        case "random":  
-            System.out.println("test");
+        case "Prefer_Beat":  
+            Strategies.Beat_Comparator comp = comparators.new Beat_Comparator(); 
+            Collections.sort(movesArrayList, comp);
         default : 
             int rndint = randomGenerator.nextInt(moves.length);
             return moves[rndint];
@@ -128,9 +137,8 @@ public class Player implements Steppable {
         }
     }
     public int throwDice(){
-        //Gibt eine Zahl zwischen 1 und 6 für den Würfelwurf aus, besser als Javas Random
-        int eyes = randomGenerator.nextInt(6) + 1; 
-        return eyes;
+        //Gibt eine Zahl zwischen 1 und 6 für den Würfelwurf aus, besser als Javas Random 
+        return randomGenerator.nextInt(6)+1;
     }
 
 }
