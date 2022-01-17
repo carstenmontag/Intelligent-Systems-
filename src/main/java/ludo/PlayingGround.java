@@ -128,6 +128,7 @@ public class PlayingGround extends SimState {
     public void setExecutedMove(Move executed_move){
         move_this_turn = executed_move;
     }
+
     public void setOrderDependantVariables() {
         for(int i = 0; i<this.numPlayers; i++){
             players[i].setOrderDependantVariables(FigureStarts[i],FigureFinishes[i],two_d_spawns[i], two_d_finish_line[i],i );

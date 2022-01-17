@@ -38,6 +38,7 @@ public class GUI extends GUIState {
     public static int games_per_comb = 5; // Gibt an wie viele Spiele per Kombination gespielt werden
     public int game_in_comb = 0; // Gibt an wie viele Spiele in der aktuellen Kombination gespielt wurden
     public int current_comb = 1; // Gibt aktuelle Kombination an
+    public int counter_game_moves = 0; // Gibt an wie viele Moves das aktuelle Game hat.
 
     Image redImage = new ImageIcon("src/main/resources/RedPiece.png").getImage();
     Image blueImage = new ImageIcon("src/main/resources/BluePiece.png").getImage();
@@ -98,7 +99,7 @@ public class GUI extends GUIState {
         sim = (PlayingGround) state;
         
         // Queue the Agents in a repeating schedule
-        System.out.println("Void Start ");
+        System.out.println("Void Start");
         state.schedule.scheduleOnce(0,0,sim.players[0]);
     
         System.out.println("Figures on the field :" + sim.field.getAllObjects().size());
@@ -125,15 +126,17 @@ public class GUI extends GUIState {
 
         if (!simulation_over){
             success = state.schedule.step(state);
+
             if (sim.move_this_turn != null){
                 moves_this_game.add(sim.move_this_turn);
-
             }
+            counter_game_moves++;
+
             // Überprüfe ob Game Beendet ist.
             if ((sim.players[0].placement != 0) && (sim.players[1].placement != 0) && (sim.players[2].placement != 0) && (sim.players[3].placement != 0)) {
-                //TODO Daten für Statistiken auslesen
                 sim.finish();
-                so.add_run(moves_this_game, game_in_comb, sim.placements.indexOf("Observed"));
+                so.add_run(moves_this_game, game_in_comb, sim.placements.indexOf("Observed"), counter_game_moves);
+                counter_game_moves = 0;
                 if(game_in_comb == games_per_comb){game_in_comb = 0;}
                 moves_this_game.clear();
                 

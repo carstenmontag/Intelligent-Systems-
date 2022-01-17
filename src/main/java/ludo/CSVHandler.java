@@ -125,12 +125,11 @@ public class CSVHandler {
         games_this_comb.clear();
     }
 
-    public void add_run(ArrayList<Move> current_game, int current_index, int placement ){
+    public void add_run(ArrayList<Move> current_game, int current_index, int placement, int counter_game_moves){
         int number_of_blocks = 0;
         int number_of_kicks = 0;
         int number_of_moves = 0;
         int number_has_been_kicked = 0;
-        int game_duration = current_game.size();
         System.out.println("Start iteration over moves");
         Iterator<Move> it = current_game.iterator();
         while(it.hasNext()){
@@ -145,6 +144,6 @@ public class CSVHandler {
             }
         }
         System.out.println("Current Index :" + current_index);
-        games_this_comb.add(new GameSave(number_of_blocks,number_of_kicks,number_of_moves,number_has_been_kicked,placement+1,game_duration));
+        games_this_comb.add(new GameSave(number_of_blocks,number_of_kicks,number_of_moves,number_has_been_kicked,placement+1,counter_game_moves));
     }
 }
