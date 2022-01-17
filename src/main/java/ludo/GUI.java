@@ -113,7 +113,6 @@ public class GUI extends GUIState {
 
     @Override
     public boolean step(){
-
         int next_player;
         if (current_player == 3){next_player = 0;}
         else{next_player = current_player +1;}

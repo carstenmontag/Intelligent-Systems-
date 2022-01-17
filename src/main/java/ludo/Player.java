@@ -118,12 +118,20 @@ public class Player implements Steppable {
             Strategies.Block_Comparator block_comp = comparators.new Block_Comparator();
             Collections.sort(movesArrayList,block_comp);
             return movesArrayList.get(0);
-            
-        default : 
+        case "First":
+            Strategies.First_Comparator first_comp = comparators.new First_Comparator();
+            Collections.sort(movesArrayList,first_comp);
+            return movesArrayList.get(0);
+        case "Last":
+            Strategies.Last_Comparator last_comp = comparators.new Last_Comparator();
+            Collections.sort(movesArrayList,last_comp);
+            return movesArrayList.get(0);
+        default :
             int rndint = randomGenerator.nextInt(moves.length);
             return moves[rndint];
         }
     }
+
     public void setOrderDependantVariables(int start, int finish, Int2D[] spawns, Int2D[] finish_line, int playerIndex){
         this.start = start;
         this.finish = finish;
@@ -133,6 +141,7 @@ public class Player implements Steppable {
         System.out.println("Variables for Player "+name+" set.");
         createFigures();    
     }
+
     public void createFigures(){
         //Die Figuren sollen auf pro Spieler Basis existieren, ist das möglich? Vielleicht die Figuren als einfache Attribute
         //Oder die Figuren als Objekte in der Simulationsenvironment, wäre vermutlich sinnvoll
@@ -141,9 +150,9 @@ public class Player implements Steppable {
             AtStartPieces[i].set_to_spawn();
         }
     }
+
     public int throwDice(){
         //Gibt eine Zahl zwischen 1 und 6 für den Würfelwurf aus, besser als Javas Random 
         return randomGenerator.nextInt(6)+1;
     }
-
 }
