@@ -1,7 +1,4 @@
 package ludo;
-
-import java.util.Comparator;
-
 import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
 import sim.util.Bag;

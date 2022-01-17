@@ -29,7 +29,7 @@ public class GUI extends GUIState {
     //Last = Bewege priorisiert die Figur, die am weitesten weg com Ziel ist.
     //Prefer_Block = Bewege priorisiert die Figur, die einen Block verursachen kann
     //Prefer_Beat = Bewege priorisiert die Figur, die einen anderen Spieler schlagen kann
-    public static String[] strategies = {"First","Smart_Prefer_Block_Beat_First","Prefer_Block","Prefer_Beat"};
+    public static String[] strategies = {"First","Last", "Prefer_Block","Prefer_Beat"};
     public static String[][] strat_combinations;
 
     public boolean simulation_over = false;
@@ -104,7 +104,6 @@ public class GUI extends GUIState {
         System.out.println("Figures on the field :" + sim.field.getAllObjects().size());
 
         // Berechne den aktuellen Stand innerhalb der Kombinationen
-        num_of_games++;
         game_in_comb++;
         if (game_in_comb >= games_per_comb) {
             current_comb++;
@@ -140,7 +139,6 @@ public class GUI extends GUIState {
                 moves_this_game.clear();
                 
                 num_of_games++;
-                game_in_comb++;
                 state = new PlayingGround(System.currentTimeMillis(), strat_combinations[current_comb-1]);
                 sim = (PlayingGround)state;
                 start();

@@ -5,7 +5,6 @@ import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -112,8 +111,14 @@ public class Player implements Steppable {
         Strategies comparators = new Strategies(); 
         switch (strategy){
         case "Prefer_Beat":  
-            Strategies.Beat_Comparator comp = comparators.new Beat_Comparator(); 
-            Collections.sort(movesArrayList, comp);
+            Strategies.Beat_Comparator beat_comp = comparators.new Beat_Comparator(); 
+            Collections.sort(movesArrayList, beat_comp);
+            return movesArrayList.get(0);
+        case "Prefer_Block" : 
+            Strategies.Block_Comparator block_comp = comparators.new Block_Comparator();
+            Collections.sort(movesArrayList,block_comp);
+            return movesArrayList.get(0);
+            
         default : 
             int rndint = randomGenerator.nextInt(moves.length);
             return moves[rndint];
