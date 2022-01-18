@@ -58,8 +58,9 @@ public class GUI extends GUIState {
     public static void main (String[] args){
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         CSVHandler so = new CSVHandler(timeStamp);
-        String[] headine = {"Winrate", "Average Placement", "Average Turns per Game", "Turns to Finish",
-                "Average Blocks Created", "Average Kicks", "Average got Kicked"};
+        String[] headine = {"Strategies","Winrate", "Average Placement", "Average Turns per Game", "Turns to Finish",
+                "Average Blocks Created", "Average Kicks", "Average got Kicked", "Game most Kicks",
+                "Game most Blocks", "Game most got Kicked"};
         so.writeRowToCSV(headine);
 
         int[][] int_combinations = so.readRowsFromCSV("src/main/resources/strategy_combinations.csv");
@@ -108,7 +109,7 @@ public class GUI extends GUIState {
         game_in_comb++;
         if (game_in_comb >= games_per_comb) {
             current_comb++;
-            so.add_comb();
+            so.add_comb(sim.strategies);
         }
     }
 

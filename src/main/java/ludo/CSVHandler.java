@@ -59,8 +59,8 @@ public class CSVHandler {
         return result;
     }
 
-    public void add_comb(){
-        String[] calcs = new String[7];
+    public void add_comb(String[] strat){
+        String[] calcs = new String[11];
         // TODO null Turns werden noch nicht gezählt
         // stats to calculate
         double games = games_this_comb.size();
@@ -99,27 +99,44 @@ public class CSVHandler {
             if (game_most_kicks<currentGame.number_of_kicks){game_most_kicks = currentGame.number_of_kicks;}
             if (game_most_got_kicked<currentGame.number_has_been_kicked){game_most_got_kicked = currentGame.number_has_been_kicked;}
         }
-        
+
+        String current_strat = "";
+        for (int i=0; i<=strat.length-1; i++) {
+            if(i== strat.length-1) {
+                current_strat+=strat[i];
+            } else {
+                current_strat+=strat[i]+", ";
+            }
+        }
+
+        calcs[0] = current_strat;
+
         win_rate = games_won/games;
-        calcs[0] = Double.toString(win_rate);
+        calcs[1] = Double.toString(win_rate);
 
         average_placement = sum_placement/games;
-        calcs[1] = Double.toString(average_placement);
+        calcs[2] = Double.toString(average_placement);
 
         average_turns_per_game = game_durations_sum/games;
-        calcs[2] = Double.toString(average_turns_per_game);
+        calcs[3] = Double.toString(average_turns_per_game);
 
         turns_to_finish = turns_observed_total/games;
-        calcs[3] = Double.toString(turns_to_finish);
+        calcs[4] = Double.toString(turns_to_finish);
 
         average_blocks_created = blocks_total/games;
-        calcs[4] = Double.toString(average_blocks_created);
+        calcs[5] = Double.toString(average_blocks_created);
 
         average_kicks = kicked_total/games;
-        calcs[5] = Double.toString(average_kicks);
+        calcs[6] = Double.toString(average_kicks);
 
         average_got_kicked = got_kicked_total/games;
-        calcs[6] = Double.toString(average_got_kicked);
+        calcs[7] = Double.toString(average_got_kicked);
+
+        calcs[8] = Double.toString(game_most_kicks);
+
+        calcs[9] = Double.toString(game_most_blocks);
+
+        calcs[10] = Double.toString(game_most_got_kicked);
 
         writeRowToCSV(calcs);
         games_this_comb.clear();
@@ -140,7 +157,7 @@ public class CSVHandler {
                 number_of_moves++;
             }
             else{
-                if (current_move.canBeat && current_move.playerBeaten.equals("Observed")){number_has_been_kicked++;} 
+                if (current_move.canBeat && current_move.playerBeaten.equals("Observed")){number_has_been_kicked++;}
             }
         }
         System.out.println("Current Index :" + current_index);
