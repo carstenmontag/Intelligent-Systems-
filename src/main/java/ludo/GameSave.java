@@ -1,5 +1,12 @@
 package ludo;
 
+
+/**
+ * @className GameSave
+ * @description Speichert in der add_run Funktion des CSVHandlers generierte Statistiken zu einem Spiel.
+ *              Diese Objekte werden später für für die gesamte Strategiekombination ausgewertet und in eine CSV Datei geschrieben. 
+ * 
+ */
 public class GameSave {
     int number_of_blocks;
     int number_of_kicks;

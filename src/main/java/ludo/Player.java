@@ -59,30 +59,30 @@ public class Player implements Steppable {
         PlayingGround gameboard = (PlayingGround)state;
         // Das aktuelle 2D Spielfeld 
         tempBoard = gameboard.field;
-        //Mit state bekommt der Agent den aktuellen Status
-        //Hier sollen die Aktionen durchgeführt werden
+        // würfeln 
         int eyesThisMove = throwDice();
         gameboard.current_roll = eyesThisMove;
+        // Steppable Part der 6er Regel Logik
         if (eyesThisMove == 6) gameboard.six_counter++;
         if (gameboard.six_counter == 3) {
-            System.out.println("Dritte 6 gewürfelt.");
+            System.out.println("Dritte 6 gewürfelt. Der nächste Spieler ist dran.");
             return;
         } 
+        // Mögliche Moves werden ermittelt.
         Move[] PossibleMoves = getPossibleMoves(eyesThisMove);
-        System.out.println("Possible moves : " + PossibleMoves.length);
         if (PossibleMoves.length>0) {
             Move move;
+            // Wenn nur ein Move verfügbar ist wird dieser ausgewählt. Andernfalls werden die Züge anhand der Strategie verglichen.
             if (PossibleMoves.length==1){move = PossibleMoves[0];}
             else{move = determineMove(PossibleMoves);}
             System.out.println("Move " + move.originx + " --> " + move.targetx + " Player : "+ playerIndex+ " Piece :" + move.piece.PieceIndex);
+            // Zug wird ausgeführt
             move.executeMove();
+            // Ausgeführter Move wird zum speichern an die Simulationsumgebung übergeben
             gameboard.setExecutedMove(move);
-
-            for(GamePiece piece : AtStartPieces){
-                System.out.print("Piece "+ piece.PieceIndex+ " block status : "+ piece.blocks);
-            }
+            // Wenn der Move einen Block setzt oder entfernt wird der redraw flag auf true gesetzt
             gameboard.redraw_images = move.redraw_images;
-            //Überprüfe ob alle Pieces des Spielers done sind
+            //Überprüfe ob alle Pieces des Spielers done sind, wenn ja dann wird die Platzierung gespeichert
             if (AtStartPieces[0].done && AtStartPieces[1].done && AtStartPieces[2].done && AtStartPieces[3].done) {
                 placement = gameboard.determinePlacement(name);
             }
@@ -127,8 +127,7 @@ public class Player implements Steppable {
      * @return Move Der preferierte Move nach der zugewiesenen Strategie.
      */
     public Move determineMove(Move[] moves){
-        // random decision default
-        // implemented tactics are executed in switch case statement
+        
         ArrayList<Move> movesArrayList = new ArrayList<Move>(Arrays.asList(moves));
         Strategies comparators = new Strategies(); 
         switch (strategy){
@@ -168,7 +167,6 @@ public class Player implements Steppable {
         this.playerIndex = playerIndex;
         this.two_d_spawns = spawns;
         this.two_d_finish_line = finish_line; 
-        System.out.println("Variables for Player "+name+" set.");
         createFigures();    
     }
     /**
