@@ -11,11 +11,7 @@ public class PlayingGround extends SimState {
     //Spielerzahl, sollte über die Konsole verändert werden können
     public long seed;
     public int numPlayers = 4;
-
     public int test_steps = 2;
-
-    //Das gesamte Spielfeld als Reihe (Wenn das letzte Feld erreicht ist soll quasi durchgeloopt werden)
-
     public boolean redraw_images = false;
     public SparseGrid2D field;
     public int current_roll ;
@@ -43,6 +39,7 @@ public class PlayingGround extends SimState {
         {new Int2D(2,11),new Int2D(3,11),new Int2D(3,12),new Int2D(2,12)}
     };
 
+    // Felder die die finish line darstellen werden definiert. 
     public Int2D[][] two_d_finish_line = {
         //green
         {new Int2D(1,7),new Int2D(2,7),new Int2D(3,7),new Int2D(4,7), new Int2D(5,7), new Int2D(6,7)},
@@ -53,7 +50,7 @@ public class PlayingGround extends SimState {
          //yellow 
         {new Int2D(7,13),new Int2D(7,12),new Int2D(7,11),new Int2D(7,10), new Int2D(7,9), new Int2D(7,8)}
     };
-
+    // Alle felder auf denen sich die Figuren bewegen werden definiert.
     public static Int2D[] locations = {
         new Int2D(0,7), new Int2D(0,6), new Int2D(1,6), new Int2D(2,6), new Int2D(3,6), new Int2D(4,6), new Int2D(5,6),
         new Int2D(6,5), new Int2D(6,4), new Int2D(6,3), new Int2D(6,2), new Int2D(6,1), new Int2D(6,0), new Int2D(7,0),
@@ -64,8 +61,9 @@ public class PlayingGround extends SimState {
         new Int2D(6,12), new Int2D(6,11), new Int2D(6,10), new Int2D(6,9), new Int2D(5,8), new Int2D(4,8), new Int2D(3,8),
         new Int2D(2,8), new Int2D(1,8), new Int2D(0,8)
     };
-
+    // Spielernamen, die Statistiken werden aus Sicht des observed players betrachtet.
     public String[] names = {"Observed", "Peter", "Hans", "Heinrich"};
+    // Player[] das alle Agentenobjekte, welche das steppable Interface implementiert sammelt.
     public Player[] players = new Player[4];
     public MersenneTwisterFast rng;
 
@@ -79,42 +77,49 @@ public class PlayingGround extends SimState {
     public String getPlayer4() { return names[3]; }
     public void setPlayer4(String val) { if (!val.equals("")) names[3] = val; }
 
-    //Das Spielfeld soll wie ein einfaches Array sein, die Spieler spawnen die Figuren an fixen stellen. Falls ein Spieler am Ursprungspunkt-2 ist kommt er auf ein neues kleines array dass die Ziellinie abbildet
-    //Spielfeld / Environment / Simulation
+    /** 
+     * @param seed      Der seed für den MersenneTwisterFast der Simulationsumgebung, wird auch an die Agenten übergeben.
+     *                  Ermittelt immer durch System.currentTimeMillis().
+     * @param strats    Die zu simulierende Strategiekombination
+     */
     public PlayingGround(long seed, String[] strats) {
 		super(seed);
+        // rng wird mit seed erstellt
         this.seed = seed;	
         this.rng = new MersenneTwisterFast(this.seed);
+        // 2D Spielfeld wird erstellt
         field = new SparseGrid2D(fieldWidth, fieldHeight);
         this.strategies = strats;
         createPlayers();
 	}
 
     public void createPlayers() {
-        //Create the number of players specified in numPlayers
-        //ToDo: Choose Strategy
-        //Erstellung der Agenten und Festlegung ihrer Reihenfolge
         int[] RollsForOrder = new int[numPlayers];
-        // DIe Agenten werden erstellt und rollen 1x den Würfel um den ersten Spieler zu bestimmen
+        // DIe Agenten werden erstellt und rollen 1x den Würfel um den ersten Spieler zu bestimmen, dieser ist grün.
+        // Alle anderen setzen sich der originalen Namensreihenfolge entsprechend ans Spielbrett 
         for(int i = 0; i<this.numPlayers; i++){
             players[i] = new Player(names[i], strategies[i], rng, field);
             RollsForOrder[i] = players[i].throwDice();
-            System.out.println(RollsForOrder[i]);
         }
         // Der höchste Roll wird ermittelt
         int highestRollPlayerIndex = getIndexOfHighestRoll(RollsForOrder);
+        // Spieler werden entsprechend des ersten Wurfes hingesetzt, hierbei ist nur der erste höchste Wurf relevant. 
         players = getOrderedPlayers(highestRollPlayerIndex);
-        for(int i=0;i<players.length;i++){System.out.println("Spieler "+ players[i].name + " Originaler Index" + players[i].playerIndex + " Neuer Index " + i);}
+        // alle Variablen die sich aus der Sitzreihenfolge für den Spieler ergeben werden gesetzt.
         setOrderDependantVariables();
     }
 
+    
+    /** 
+     * @param IndexHighestRoll Index des Spielers mit dem höchsten Wurf im Array.
+     * @return Player[]
+     */
     public Player[] getOrderedPlayers(int IndexHighestRoll) {
         // Höchster Roll --> erster Spieler, alle anderen werden der Sitzreihenfolge nach geordnet 
         // z.B. 1. Index 3 --> 2. Index 0, 3. Index 1, 4. Index 2 
         Player[] ordered = new Player[numPlayers];
         Player HighestRollPlayer = players[IndexHighestRoll];
         ordered[0] = HighestRollPlayer;
-        System.out.println(HighestRollPlayer.name);
         int currentIndex = IndexHighestRoll;
         int toFill = 1;
         while(toFill<numPlayers){
@@ -125,16 +130,29 @@ public class PlayingGround extends SimState {
         }
         return ordered;
     }
+    
+    /** 
+     * @param executed_move Variablen setter. Wird nahc jedem ausgeführten Zug gesetzt um alle Moves für die Auswertung in der GUI Klasse
+     *                      speichern zu können. 
+     */
     public void setExecutedMove(Move executed_move){
         move_this_turn = executed_move;
     }
-
+    
+    /** 
+     *@description Setzt alle Variablen für die Spieler, welche abhängig von der Sitzreihenfolge sind.
+     */
     public void setOrderDependantVariables() {
         for(int i = 0; i<this.numPlayers; i++){
             players[i].setOrderDependantVariables(FigureStarts[i],FigureFinishes[i],two_d_spawns[i], two_d_finish_line[i],i );
         }
     }
 
+    
+    /** 
+     * @param rolls Die 4 ersten Rolls jedes Spiels. Wichtig für die Sitzreihenfolge.
+     * @return int Index des Spielers mit dem höchsten Wurf im Array players
+     */
     public int getIndexOfHighestRoll(int[] rolls) {
         if ( rolls == null || rolls.length == 0 ) return -1; // null or empty
         int largest = 0;
@@ -144,6 +162,12 @@ public class PlayingGround extends SimState {
         return largest; // position of the first largest found
     }
 
+    
+    /** 
+     * @description setzt den Spielernamen auf den ersten freien Index im placements Array
+     * @param player_name Spieler der eine Platzierung erhalten soll
+     * @return int Die Anzahl der bereits fertigen Spieler.
+     */
     public int determinePlacement(String player_name) {
         placements.add(player_name);
         return placements.size();
