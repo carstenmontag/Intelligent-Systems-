@@ -103,7 +103,7 @@ public class Player implements Steppable {
         int possible_counter = 0;
         Move[] moves = new Move[4];
         for(int i = 0; i<AtStartPieces.length; i++){
-            Move move = new Move(AtStartPieces[i], eyesThisMove, AtStartPieces, name, tempBoard);
+            Move move = new Move(AtStartPieces[i], eyesThisMove, name, tempBoard);
             // Konstruktor überprüft auf Spielregeln, Blocks etc.
             if (move.possible){possible_counter++;} // Größe für das Array mgl Moves wird bei Iteration ermittelt.
             moves[i] = move;
