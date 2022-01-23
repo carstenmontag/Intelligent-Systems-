@@ -17,7 +17,7 @@ public class PlayingGround extends SimState {
     public int current_roll ;
     public int six_counter = 0;
     public int fieldWidth = 15;
-    public int fieldHeight = 15;
+    public int fieldHeight = 16;
     public ArrayList<String> placements = new ArrayList<>();
     public Move move_this_turn;
     // Spielerparameter werden initialisert, name optional später über UI konfigurierbar

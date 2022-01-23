@@ -235,7 +235,7 @@ public class GUI extends GUIState {
         }
         // Brett wird neu gezeichnet.
         display.reset();
-        setBackground();
+
         display.repaint();
     }
 
@@ -248,7 +248,7 @@ public class GUI extends GUIState {
     @Override
     public void init(Controller c) {
         super.init(c);
-        display = new Display2D(720,720,this);
+        display = new Display2D(720,768,this);
         display.setClipping(false);
         // GameFrame wird erstellt
         displayFrame = display.createFrame();
@@ -256,9 +256,10 @@ public class GUI extends GUIState {
         displayFrame.setResizable(false);
         c.registerFrame(displayFrame);
         displayFrame.setVisible(true);
+        setBackground();
         // SparseGridPortrayal2D Objekt wird an die GUI gebindet.
         display.attach(boardPortrayal, "FieldBoard" );
-        display.attach( new GameOverlay(this), "GameOverlay");
+        display.attach(new GameOverlay(this), "GameOverlay");
     }
     // Anwendung wird geshclossen
     public void quit() {
