@@ -3,14 +3,10 @@ package ludo;
 import sim.engine.*;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
-
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import ec.util.*;
-
-
 
 /**
  * @className Player
@@ -35,9 +31,7 @@ public class Player implements Steppable {
      * @param strategy  Strategie des Spielers, implementiert durch einen switch case, 
      *                  welcher je nach Taktik mithilfe von custom Comparators einen Zug aussucht
      * @param rng       MersenneTwisterFast
-     * @param tempBoard Referenz auf ddas Spielfeld 
-     * @return Player 
-     
+     * @param tempBoard Referenz auf das Spielfeld
      */
     public Player(String name, String strategy, MersenneTwisterFast rng, SparseGrid2D tempBoard){
         super();
@@ -47,6 +41,7 @@ public class Player implements Steppable {
         this.tempBoard = tempBoard;
         this.placement = 0; //1=1Platz, 2=2Platz ...
     }
+
     /** 
      * @description Die step Funktion des Agenten. In ihr würfelt jeder Agent, auf Basis dieses Wurfes werden 4 Move Objekte erstellt.
      *              Diese werden vom Player anhand der Strategie mithilfe eines Comparators sortiert. 
@@ -87,12 +82,9 @@ public class Player implements Steppable {
                 placement = gameboard.determinePlacement(name);
             }
         }
-        else{
-            gameboard.setExecutedMove(null);
-        }
+        else{gameboard.setExecutedMove(null);}
     }
 
-    
     /** 
      * @description         Diese Funktion erstellt auf Basis des Wurfes 4 Moveobjekte, diese werden in ihrem Konstruktor
      *                      auf Spielrestriktionen geprüft und bei Verletzung aussortiert,
@@ -120,7 +112,6 @@ public class Player implements Steppable {
         return possibleMoves;
     }
 
-    
     /** 
      * @description Ein Comparator basierend auf dem String strategy wird genutzt um die Moves zu sortieren. Der beste wird ausgewählt
      * @param moves Das Array mit allen möglichen Spielzügen diesen Zug.
@@ -153,7 +144,6 @@ public class Player implements Steppable {
         }
     }
 
-    
     /** 
      * @param start         Startpunkt auf dem Spielfeld 1D
      * @param finish        letzter Platz vor dem Ziel
@@ -169,6 +159,7 @@ public class Player implements Steppable {
         this.two_d_finish_line = finish_line; 
         createFigures();    
     }
+
     /**
     * @description Spielfiguren werden erstellt und auf das entsprechende Startfeld aus dem spawns Array gesetzt
     */
@@ -179,7 +170,6 @@ public class Player implements Steppable {
         }
     }
 
-    
     /** 
      * @return int
      */

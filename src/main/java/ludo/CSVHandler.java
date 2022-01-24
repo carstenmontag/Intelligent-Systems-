@@ -15,7 +15,7 @@ import java.util.Iterator;
  */
 public class CSVHandler {
     // Array List in welcher alle Statistiken für ein Spiel gespeichet werden.
-    ArrayList<GameSave> games_this_comb = new ArrayList<GameSave>();
+    ArrayList<GameSave> games_this_comb = new ArrayList<>();
     // Dateipfad zur result CSV
     public String filename;
     public CSVHandler(String timeStamp) {
@@ -23,7 +23,6 @@ public class CSVHandler {
         this.filename = "results/"+timeStamp+".csv";
     }
 
-    
     /** 
      * @description Schreibt eine Reihe in die CSV Datei, Die entsprechenden Spaltennamen werden 1x in dem GUI zu Beginn des Programms mit 
      *              dieser Funktion geschrieben.
@@ -48,10 +47,12 @@ public class CSVHandler {
             //Stream schließen.
             pw.close();
         }
-        catch(Exception e){}
+        catch(Exception e){
+            System.err.println("File writing failed:");
+            e.printStackTrace();
+        }
     }
 
-    
     /** 
      * @description Liest die zu simulierenden Strategiekombinationen ein.
      * @param filepath Die CSV Datei in welcher die Startegiekombinationen liegen.
@@ -80,12 +81,14 @@ public class CSVHandler {
             }
             // Inputstream wird geschlossen.
             br.close();
-        } catch (Exception e){}
+        } catch (Exception e){
+            System.err.println("File reading failed");
+            e.printStackTrace();
+        }
 
         return result;
     }
 
-    
     /** 
      * @description Die Statistiken für eine Kombination werdfen aus den zwischengespeichrten GameSave Objekten errechnet und
      *              mithilfe der writeRowToCSV/() gesichert.
@@ -117,7 +120,7 @@ public class CSVHandler {
         // iteration
         while(it.hasNext()){
             // Statistiken berechnen
-            GameSave currentGame = (GameSave)it.next();
+            GameSave currentGame = it.next();
             sum_placement += currentGame.placement;
             game_durations_sum += currentGame.game_duration;
             turns_observed_total += currentGame.number_of_moves;
@@ -173,7 +176,6 @@ public class CSVHandler {
         games_this_comb.clear();
     }
 
-    
     /** 
      * @description Anaylsiert ein Spiel und speichert Statistiken zu diesem in einem GameSave Objekt zwischen
      * @param current_game
@@ -190,7 +192,7 @@ public class CSVHandler {
         //Iteation durch alle Moves und Berechnung der Statistiken
         Iterator<Move> it = current_game.iterator();
         while(it.hasNext()){
-            Move current_move = (Move)it.next();
+            Move current_move = it.next();
             if (current_move.playerName.equals("Observed")){
                 if (current_move.canBeat){number_of_kicks++;}
                 if (current_move.canBlock){number_of_blocks++;}

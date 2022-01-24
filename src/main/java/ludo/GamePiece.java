@@ -1,5 +1,5 @@
 package ludo;
-import ec.util.MersenneTwisterFast;
+
 import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
 
@@ -47,6 +47,7 @@ public class GamePiece{
         this.field = field;
         calc_finish_corridor();
     }
+
     /**
      * @description Berechnet den Finish Korridorm, dieser inkludiert 6 Felder vor dem Ziel des Spielsteins.
      *              Utility Funktion. Wenn ein Spielstein sich in diesem Korridor befindet muss geprüft werden ob er ins Ziel kann. 
@@ -61,6 +62,7 @@ public class GamePiece{
             corridor[i] = tmpfinish-i;
         }
     }
+
     /**
      * @description Setzt den Stein auf den im Konstruktor festgelegten Spawn.
      */
@@ -70,6 +72,7 @@ public class GamePiece{
         this.position_two_d = spawn;
 
     }
+
     /**
      * @description Wird beim würfeln einer 6 dazu genutzt den Stein auf das erste Feld zu setzen.
      */

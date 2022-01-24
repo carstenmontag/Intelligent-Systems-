@@ -4,14 +4,12 @@ import ec.util.MersenneTwisterFast;
 import sim.engine.*;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Int2D;
-
 import java.util.ArrayList;
 
 public class PlayingGround extends SimState {
     //Spielerzahl, sollte über die Konsole verändert werden können
     public long seed;
     public int numPlayers = 4;
-    public int test_steps = 2;
     public boolean redraw_images = false;
     public SparseGrid2D field;
     public int current_roll ;
@@ -50,6 +48,7 @@ public class PlayingGround extends SimState {
          //yellow 
         {new Int2D(7,13),new Int2D(7,12),new Int2D(7,11),new Int2D(7,10), new Int2D(7,9), new Int2D(7,8)}
     };
+
     // Alle felder auf denen sich die Figuren bewegen werden definiert.
     public static Int2D[] locations = {
         new Int2D(0,7), new Int2D(0,6), new Int2D(1,6), new Int2D(2,6), new Int2D(3,6), new Int2D(4,6), new Int2D(5,6),
@@ -61,6 +60,7 @@ public class PlayingGround extends SimState {
         new Int2D(6,12), new Int2D(6,11), new Int2D(6,10), new Int2D(6,9), new Int2D(5,8), new Int2D(4,8), new Int2D(3,8),
         new Int2D(2,8), new Int2D(1,8), new Int2D(0,8)
     };
+
     // Spielernamen, die Statistiken werden aus Sicht des observed players betrachtet.
     public String[] names = {"Observed", "Peter", "Hans", "Heinrich"};
     // Player[] das alle Agentenobjekte, welche das steppable Interface implementiert sammelt.
@@ -109,7 +109,6 @@ public class PlayingGround extends SimState {
         setOrderDependantVariables();
     }
 
-    
     /** 
      * @param IndexHighestRoll Index des Spielers mit dem höchsten Wurf im Array.
      * @return Player[]
@@ -147,7 +146,6 @@ public class PlayingGround extends SimState {
             players[i].setOrderDependantVariables(FigureStarts[i],FigureFinishes[i],two_d_spawns[i], two_d_finish_line[i],i );
         }
     }
-
     
     /** 
      * @param rolls Die 4 ersten Rolls jedes Spiels. Wichtig für die Sitzreihenfolge.
@@ -162,7 +160,6 @@ public class PlayingGround extends SimState {
         return largest; // position of the first largest found
     }
 
-    
     /** 
      * @description setzt den Spielernamen auf den ersten freien Index im placements Array
      * @param player_name Spieler der eine Platzierung erhalten soll

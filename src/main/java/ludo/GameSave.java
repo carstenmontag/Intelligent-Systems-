@@ -1,6 +1,5 @@
 package ludo;
 
-
 /**
  * @className GameSave
  * @description Speichert in der add_run Funktion des CSVHandlers generierte Statistiken zu einem Spiel.

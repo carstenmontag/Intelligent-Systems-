@@ -8,9 +8,7 @@ import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.swing.*;
-
 import sim.portrayal.simple.FacetedPortrayal2D;
 import sim.portrayal.simple.ImagePortrayal2D;
 
@@ -55,12 +53,10 @@ public class GUI extends GUIState {
     public Image[] roadblock_images = {greenImageBlock, redImageBlock, blueImageBlock, yellowImageBlock};
     // Alle ausgefüphrten Züge eines Spiels werden in einer enstprechenden Array Liste gespeichert.
     // Es können so alle Zügen nachvollzogen werden.
-    public ArrayList<Move> moves_this_game = new ArrayList<Move>();
+    public ArrayList<Move> moves_this_game = new ArrayList<>();
     // CSV Handler Objekt. so steht für save object. 
     public CSVHandler so;
 
-    
- 
     public static void main (String[] args){
         /**
         * Hier wird eine Instanz der Klasse CSVHandler gebildet.
@@ -91,7 +87,7 @@ public class GUI extends GUIState {
 
     public GUI(PlayingGround baseGround, CSVHandler so){
        /**
-        * @param CSVHandler   
+        * @param CSVHandler
         * @param PlayingGround Die erste Simulation.
         */
         super(baseGround);
@@ -101,9 +97,8 @@ public class GUI extends GUIState {
         this.so = so;
     }
 
-    
     /** 
-     * @return String Der Name der Anwendung. Fnestername wird festgelegt.
+     * @return String Der Name der Anwendung. Fenstername wird festgelegt.
      */
     public static String getName(){
         return "Ludo";
@@ -136,12 +131,12 @@ public class GUI extends GUIState {
             so.add_comb(sim.strategies);
         }
     }
+
     /** 
      *@description      Diese Funktion wird für jeden Zeitsschritt in der Simulationsumgebung ausgeführt. 
      *                  Sie ist Hauptbestandteil der Simulationslogik. Dabei führt sie unter anderem die step 
      *                  Funktion des steppable Objektes Player aus
-     * 
-     * 
+     *
      * @return boolean 
      */
     @Override
@@ -199,10 +194,7 @@ public class GUI extends GUIState {
             if (roll == 6 && sim.six_counter<3){
                 next_player = current_player; 
             }
-            else {
-                sim.six_counter = 0;
-            
-            }
+            else {sim.six_counter = 0;}
             // Der nächste Zug wird der schedule hinzugefügt
             state.schedule.scheduleOnce(state.schedule.getTime()+1,0,sim.players[next_player]);
             current_player = next_player;
@@ -239,7 +231,6 @@ public class GUI extends GUIState {
         display.repaint();
     }
 
-    
     /** 
      * @description Zeichnet das Board, setzt das board portrayal objekt und bindet das GameOverlay Objekt an die GUI
      *  
@@ -261,7 +252,10 @@ public class GUI extends GUIState {
         display.attach(boardPortrayal, "FieldBoard" );
         display.attach(new GameOverlay(this), "GameOverlay");
     }
-    // Anwendung wird geschlossen
+
+    /**
+     * @description Anwendung wird geschlossen
+     */
     public void quit() {
         // quit() method is called to tell the GUIState to shut down
         super.quit();
@@ -269,6 +263,7 @@ public class GUI extends GUIState {
         displayFrame = null;
         display = null;
     }
+
     /**
      * @description Spielbrett wird gezeichnet. 
      */
@@ -282,7 +277,6 @@ public class GUI extends GUIState {
         display.setBackdrop(new TexturePaint(b, new Rectangle(0,0,i.getWidth(null),i.getHeight(null))));
     }
 
-    
     /** 
      * @param indices 0,1,2,3 --> index in dem Array strategies
      * @return String[] Übersetzte Strategien
@@ -290,5 +284,4 @@ public class GUI extends GUIState {
     public static String[] indices_to_strats(int[] indices) {
         return new String[]{strategies[indices[0]], strategies[indices[1]], strategies[indices[2]], strategies[indices[3]]};
     }
-
 }

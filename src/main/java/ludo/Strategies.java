@@ -1,4 +1,5 @@
 package ludo;
+
 import java.util.Comparator;
 
 /**
@@ -30,6 +31,7 @@ public class Strategies {
             return Boolean.compare(beatsm1, beatsm2);
         }   
     }
+
     /**
      *
      * @className Block_Comparator
@@ -67,6 +69,7 @@ public class Strategies {
             else {return -1;}
         }
     }
+
     /**
      * @className First_Comparator
      * @description Strategie : Den Stein, welcher die geringste Distanz zum Ziel hat wird bewegt.
@@ -78,6 +81,7 @@ public class Strategies {
             return Integer.compare(distance2, distance1);
         }
     }
+
     /**
      *@className Last_Comparator
      * @description Strategie : Den Stein, welcher die geringste Distanz zum Ziel hat wird bewegt.
@@ -90,7 +94,6 @@ public class Strategies {
         }
     }
 
-    
     /**
      * @description  Diese Funktion ist eine utility Funktion, welche die Distanz zwischen der Position
      *               eines Steins und dem finish berechnet. 
@@ -117,9 +120,7 @@ public class Strategies {
             //grün
             if (finish == 0)  {return 52-origin;}
             // rot, gelb, blau
-            else {
-                return finish-origin;
-            }
+            else {return finish-origin;}
         }
     }
 }
