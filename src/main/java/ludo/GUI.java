@@ -34,7 +34,7 @@ public class GUI extends GUIState {
     // Wie viele Spiele wurden insgesamt gepsielt
     public int num_of_games = 1;
 
-    public static int games_per_comb = 2000; // Gibt an wie viele Spiele per Kombination gespielt werden
+    public static int games_per_comb = 100; // Gibt an wie viele Spiele per Kombination gespielt werden
     public int game_in_comb = 0; // Gibt an wie viele Spiele in der aktuellen Kombination gespielt wurden
     public int current_comb = 1; // Gibt aktuelle Kombination an
     public int counter_game_moves = 0; // Gibt an wie viele Moves das aktuelle Game hat.
@@ -58,14 +58,14 @@ public class GUI extends GUIState {
     public CSVHandler so;
 
     public static void main (String[] args){
-        /**
-         * Instanz der Klasse CreateIndex wird erstellt, um der Simulation eine Beschreibung hinzuzufügen.
+        /*
+          Instanz der Klasse CreateIndex wird erstellt, um der Simulation eine Beschreibung hinzuzufügen.
          */
         CreateIndex in = new CreateIndex();
         in.copy_files();
-        /**
-        * Hier wird eine Instanz der Klasse CSVHandler gebildet.
-        * In dieser werden alle Simulationsergebnisse für die spätere Auswertung gesichert.
+        /*
+         Hier wird eine Instanz der Klasse CSVHandler gebildet.
+         In dieser werden alle Simulationsergebnisse für die spätere Auswertung gesichert.
         */
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         CSVHandler so = new CSVHandler(timeStamp);
@@ -76,15 +76,15 @@ public class GUI extends GUIState {
         so.writeRowToCSV(headine);
         // Die Strategiekombinationen die simuliert werden sollen werden aus einer CSV Datei gelesen 
         int[][] int_combinations = so.readRowsFromCSV("src/main/resources/strategy_combinations.csv");
-        /**
-         * Die in der CSV als Nummern angegebenen Strategien werden in die entsprechenden Strings übersetzt
+        /*
+          Die in der CSV als Nummern angegebenen Strategien werden in die entsprechenden Strings übersetzt
          */
         strat_combinations = new String[int_combinations.length][int_combinations[0].length];
         for(int i=0; i<=int_combinations.length-1; i++) {
             strat_combinations[i] = indices_to_strats(int_combinations[i]);
         }
-        /**
-         * Die erste Simulationsumgebung wird erstellt und zusammen mit der CSVHandler Instanz an den GUI Konstruktor übergeben.
+        /*
+          Die erste Simulationsumgebung wird erstellt und zusammen mit der CSVHandler Instanz an den GUI Konstruktor übergeben.
          */
         PlayingGround baseGround =  new PlayingGround(System.currentTimeMillis(), strat_combinations[0]);
         GUI vid = new GUI(baseGround,so);
@@ -173,7 +173,7 @@ public class GUI extends GUIState {
                 // Wenn ja beende die Simulation.
                 sim.finish();
                 // Füge das Spiel dem CSV Hanndler hinzu um es später auszuwerten
-                so.add_run(moves_this_game, game_in_comb, sim.placements.indexOf("Observed"), counter_game_moves);
+                so.add_run(moves_this_game, sim.placements.indexOf("Observed"), counter_game_moves);
                 // resette alle simulationsabhängigen Variablen.
                 counter_game_moves = 0;
                 if(game_in_comb == games_per_comb){game_in_comb = 0;}

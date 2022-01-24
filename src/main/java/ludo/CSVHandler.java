@@ -179,11 +179,10 @@ public class CSVHandler {
     /** 
      * @description Anaylsiert ein Spiel und speichert Statistiken zu diesem in einem GameSave Objekt zwischen
      * @param current_game
-     * @param current_index
      * @param placement
      * @param counter_game_moves
      */
-    public void add_run(ArrayList<Move> current_game, int current_index, int placement, int counter_game_moves){
+    public void add_run(ArrayList<Move> current_game, int placement, int counter_game_moves){
         // wichtige Statistiken
         int number_of_blocks = 0;
         int number_of_kicks = 0;

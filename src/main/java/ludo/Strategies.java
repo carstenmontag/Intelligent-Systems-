@@ -27,15 +27,22 @@ public class Strategies {
         public int compare(Move m1, Move m2){
             boolean beatsm1 = m1.canBeat;
             boolean beatsm2 = m2.canBeat;
-            // die oben beschriebene Logik wird durch diese Utility Funktion ausgeführt.
-            return Boolean.compare(beatsm1, beatsm2);
+
+            if ((m1.roll == 6) && (m1.piece.positionx == -1) && (m2.piece.positionx != -1))  {
+                return -1;
+            } else if ((m1.roll == 6) && (m1.piece.positionx != -1) && (m2.piece.positionx == -1)) {
+                return 1;
+            } else {
+                // die oben beschriebene Logik wird durch diese Utility Funktion ausgeführt.
+                return Boolean.compare(beatsm2, beatsm1);
+            }
         }   
     }
 
     /**
      *
      * @className Block_Comparator
-     * @description Strategie :  Gesamtanzahl blocks aufrecht erhalten bzw erhöhen.
+     * @description Strategie : Gesamtanzahl blocks aufrecht erhalten bzw erhöhen.
      *              Die gezeigte Wahrheitstabelle wird mithilfe von 3 Logikaussagen überprüft.               
      */
     public class Block_Comparator implements Comparator<Move>{
@@ -50,23 +57,35 @@ public class Strategies {
             1111 --> 0
             1100 --> 0
             0011 --> 0
+
             0100 --> 1 
             0110 --> 1 
             0111 --> 1 
             0010 --> 1 
             1110 --> 1
+
             0001 --> -1 
             1000 --> -1 
             1001 --> -1 
             1011 --> -1 
-            1101 --> -1 
+            1101 --> -1
             */
-            if ((m1.piece.blocks == m2.piece.blocks)&&(m1.canBlock == m2.canBlock)) {return 0;}
-            else if ((m1.piece.blocks && m1.canBlock && !m2.piece.blocks && !m2.canBlock)||(!m1.piece.blocks && !m1.canBlock && m2.piece.blocks && m2.canBlock)){return 0;}  
-            else if (!m1.piece.blocks && m1.canBlock ||
-                    (m1.piece.blocks && m1.canBlock && m2.piece.blocks && !m2.canBlock)||
-                    (!m1.piece.blocks && !m1.canBlock && m2.piece.blocks && !m2.canBlock))  {return 1;}
-            else {return -1;}
+
+            if ((m1.roll == 6) && (m1.piece.positionx == -1) && (m2.piece.positionx != -1))  {
+                System.out.println("Returned 1");
+                return -1;
+            } else if ((m1.roll == 6) && (m1.piece.positionx != -1) && (m2.piece.positionx == -1)) {
+                System.out.println("Returned -1");
+                return 1;
+            }
+
+            if ((!m1.piece.blocks && m1.canBlock && !m2.piece.blocks && !m2.canBlock) || (!m1.piece.blocks && m1.canBlock && m2.piece.blocks && !m2.canBlock)
+                    || (!m1.piece.blocks && m1.canBlock && m2.piece.blocks && m2.canBlock) || (!m1.piece.blocks && !m1.canBlock && m2.piece.blocks && !m2.canBlock)
+                    || (m1.piece.blocks && m1.canBlock && m2.piece.blocks && !m2.canBlock)) {return -1;}
+            else if ((!m1.piece.blocks && !m1.canBlock && !m2.piece.blocks && m2.canBlock) || (m1.piece.blocks && !m1.canBlock && !m2.piece.blocks && !m2.canBlock)
+                    || (m1.piece.blocks && !m1.canBlock && !m2.piece.blocks && m2.canBlock) || (m1.piece.blocks && !m1.canBlock && m2.piece.blocks && m2.canBlock)
+                    || (m1.piece.blocks && m1.canBlock && !m2.piece.blocks && m2.canBlock)) {return 1;}
+            else return 0;
         }
     }
 
@@ -78,7 +97,7 @@ public class Strategies {
         public int compare(Move m1,Move m2){
             int distance1 = calc_distance(m1.originx, m1.piece.finish);
             int distance2 = calc_distance(m2.originx, m2.piece.finish);
-            return Integer.compare(distance2, distance1);
+            return Integer.compare(distance1, distance2);
         }
     }
 
@@ -90,7 +109,7 @@ public class Strategies {
         public int compare(Move m1,Move m2){
             int distance1 = calc_distance(m1.originx, m1.piece.finish);
             int distance2 = calc_distance(m2.originx, m2.piece.finish);
-            return Integer.compare(distance1, distance2);
+            return Integer.compare(distance2, distance1);
         }
     }
 
@@ -103,6 +122,9 @@ public class Strategies {
      * @return int
      */
     public static int calc_distance(int origin, int finish){
+        if (origin == -1) {
+            return 9999;
+        }
         // Stein steht vor HomeColumn
         if (finish == origin) {
             return 0;

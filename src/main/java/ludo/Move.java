@@ -47,7 +47,7 @@ public class Move {
     public String playerBeaten = "";
 
     /**
-     * @description Routine für jeden Move, hier wird bestimmt ob der Zug mgl ist
+     * @description Routine für jeden Move, hier wird bestimmt, ob der Zug mgl ist
      * @param piece
      * @param roll
      * @param playerName

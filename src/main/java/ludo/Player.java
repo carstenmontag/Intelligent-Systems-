@@ -119,10 +119,10 @@ public class Player implements Steppable {
      */
     public Move determineMove(Move[] moves){
         
-        ArrayList<Move> movesArrayList = new ArrayList<Move>(Arrays.asList(moves));
-        Strategies comparators = new Strategies(); 
+        ArrayList<Move> movesArrayList = new ArrayList<>(Arrays.asList(moves));
+        Strategies comparators = new Strategies();
         switch (strategy){
-        case "Prefer_Beat":  
+        case "Prefer_Beat":
             Strategies.Beat_Comparator beat_comp = comparators.new Beat_Comparator(); 
             Collections.sort(movesArrayList, beat_comp);
             return movesArrayList.get(0);
