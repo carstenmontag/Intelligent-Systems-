@@ -59,6 +59,11 @@ public class GUI extends GUIState {
 
     public static void main (String[] args){
         /**
+         * Instanz der Klasse CreateIndex wird erstellt, um der Simulation eine Beschreibung hinzuzufügen.
+         */
+        CreateIndex in = new CreateIndex();
+        in.copy_files();
+        /**
         * Hier wird eine Instanz der Klasse CSVHandler gebildet.
         * In dieser werden alle Simulationsergebnisse für die spätere Auswertung gesichert.
         */
