@@ -261,7 +261,7 @@ public class GUI extends GUIState {
         display.attach(boardPortrayal, "FieldBoard" );
         display.attach(new GameOverlay(this), "GameOverlay");
     }
-    // Anwendung wird geshclossen
+    // Anwendung wird geschlossen
     public void quit() {
         // quit() method is called to tell the GUIState to shut down
         super.quit();

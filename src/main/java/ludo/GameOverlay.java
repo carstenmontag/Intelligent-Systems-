@@ -4,11 +4,23 @@ import sim.portrayal.DrawInfo2D;
 import sim.portrayal.FieldPortrayal2D;
 import java.awt.*;
 
+/**
+ * @className GameOverlay
+ * @description Diese Klasse zeigt information über den Simulationstatus auf der GUI an.
+ *              Das GameOverlay zeigt welcher Spieler im aktuellen Spiel welche Farbe hat,
+ *              welche Strategie er verfolgt und an welchem Punkt sich die Simulation befindet.
+ */
 public class GameOverlay extends FieldPortrayal2D {
     GUI ui;
     Font font = new Font("SansSerif", Font.BOLD, 16);
     public GameOverlay(GUI ui) { this.ui = ui;}
 
+    /**
+     * @description Zeichnet und aktualisiert die Daten auf den Hintergrund.
+     * @param obj
+     * @param graphics
+     * @param info
+     */
     public void draw(Object obj, Graphics2D graphics, DrawInfo2D info) {
         PlayingGround sim = (PlayingGround) (ui.state);
 
