@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import os 
 from copy import deepcopy 
 from pathlib import Path
+import numpy as np
 
 
 
@@ -36,9 +37,10 @@ class Harry_Plotter():
         return df_observed
 
     def create_plots(self,):
-       self.plot_winrate()
-    # self.plot_blocks_by_avg_turns(obs)
-    
+        self.plot_winrate()
+        self.plot_blocks_by_avg_turns()
+        self.plot_beats_by_avg_turns()
+
     def plot_winrate(self):
         fig,ax = plt.subplots(nrows= 2 ,ncols = 2,figsize = (6,7.5))
         for i,observer in enumerate(self.observer_sim_dic.keys()):
@@ -58,19 +60,86 @@ class Harry_Plotter():
             c_axis.set_xticklabels(enemy_list,fontsize = 7.5)
             c_axis.set_ylim((0,0.75))
             c_axis.set_title(f"Winrates by {observer}",fontsize = 10)
-            colors = ['blue','red']
+            colors = ['b','r']
             handles = [plt.Rectangle((0,0),1,1, color=color) for color in colors]
             c_axis.legend(handles,["vs3", "vs2"],loc = 'upper right')
             c_axis.axhline(y = 0.25,color = '0.75')
+            plt.suptitle("Winrates measured for every Strategy \n against 3 and 2 players of each other strategy")
             plt.savefig(self.path_plot_dir.joinpath("plots/winrate_plot.png"),dpi = fig.dpi)
-    def plot_blocks_by_avg_turns():
-        pass
-    def plot_beats_by_avg_turns():
-        pass
-    def plots_got_kicked_by_avg_turns():
-        pass
-    def __by_avg_turns__():
-        pass
+
+    def plot_blocks_by_avg_turns(self):
+        fig,ax = plt.subplots(nrows = 2, ncols = 2, figsize = (8,7.5))
+        for i,observer in enumerate(self.observer_sim_dic.keys()):   
+            x_axis = 0
+            if i>1 : x_axis = 1
+            y_axis =i%2
+            c_axis = ax[x_axis][y_axis]
+            subdata = self.observer_sim_dic.get(observer)
+            enemy_list = deepcopy(self.strategies)
+            enemy_list.remove(observer)
+            #data prep
+            positions = [0,1.25,2.5]
+            avg_turns_by_obs3,avg_turns_by_obs2 = self.extract_data_vs3_vs2(observer,subdata,enemy_list,"Turns to Finish")
+            avg_blocks3,avg_blocks2 = self.extract_data_vs3_vs2(observer,subdata,enemy_list,"Average Blocks Created")
+            #most_blocks3, most_blocks2= self.extract_data_vs3_vs2(observer,subdata,enemy_list,"Game most Blocks")
+            weighted_avg_blocks3 = [avg_blocks3[i]/avg_turns_by_obs3[i]for i in range(len(avg_blocks3))]
+            weighted_avg_blocks2 = [avg_blocks2[i]/avg_turns_by_obs2[i]for i in range(len(avg_blocks2))]
+            #weighted_most_blocks3 = [most_blocks3[i]/avg_turns_by_obs3[i] for i in range(len(most_blocks3))]
+            #weighted_most_blocks2 = [most_blocks2[i]/avg_turns_by_obs2[i] for i in range(len(most_blocks2))] 
+
+            c_axis.bar(positions,weighted_avg_blocks3,width = 0.2,color = 'b')
+            #c_axis.bar([position+0.25 for position in positions],weighted_most_blocks3,width = 0.2,color = 'c')
+            #c_axis.bar([position+0.75 for position in positions],weighted_most_blocks2,width = 0.2,color = 'orange')
+            c_axis.bar([position+0.5 for position in positions],weighted_avg_blocks2,width = 0.2, color = 'r')
+            x_ticks = [0.34,1.88,3.42]
+            c_axis.set_xticks(x_ticks)
+            c_axis.set_xticklabels(enemy_list,fontsize = 7.5)
+            c_axis.set_title(f"{observer}",fontsize = 10)
+            colors = ['r','b']
+            handles = [plt.Rectangle((0,0),1,1, color=color) for color in colors]
+            c_axis.legend(handles,["vs3", "vs2"],loc = 'upper right')
+            #c_axis.set_ylim
+        plt.suptitle("'Average blocks'/'Turns to Finish")
+        plt.savefig(self.path_plot_dir.joinpath("plots/block_by_turns.png"),dpi = fig.dpi)
+
+
+    def plot_beats_by_avg_turns(self):
+        
+        fig,ax = plt.subplots(nrows = 2, ncols = 2, figsize = (8,7.5))
+        for i,observer in enumerate(self.observer_sim_dic.keys()):   
+            x_axis = 0
+            if i>1 : x_axis = 1
+            y_axis =i%2
+            c_axis = ax[x_axis][y_axis]
+            subdata = self.observer_sim_dic.get(observer)
+            enemy_list = deepcopy(self.strategies)
+            enemy_list.remove(observer)
+            #data prep
+            positions = [0,1.25,2.5]
+            avg_turns_by_obs3,avg_turns_by_obs2 = self.extract_data_vs3_vs2(observer,subdata,enemy_list,"Turns to Finish")
+            avg_beats3,avg_beats2 = self.extract_data_vs3_vs2(observer,subdata,enemy_list,"Average Kicks")
+            most_beats3, most_beats2 = self.extract_data_vs3_vs2(observer, subdata, enemy_list, "Game most Kicks")
+          
+            weighted_avg_beats3 = [avg_beats3[i]/avg_turns_by_obs3[i]for i in range(len(avg_beats3))]
+            weighted_avg_beats2 = [avg_beats2[i]/avg_turns_by_obs2[i]for i in range(len(avg_beats2))]
+            weighted_most_beats3 = [most_beats3[i]/avg_turns_by_obs3[i] for i in range(len(most_beats3))]
+            weighted_most_beats2 = [most_beats2[i]/avg_turns_by_obs2[i] for i in range(len(most_beats2))] 
+
+            c_axis.bar(positions,weighted_avg_beats3,width = 0.2,color = 'b')
+            c_axis.bar([position+0.25 for position in positions],weighted_most_beats3,width = 0.2,color = 'c')
+            c_axis.bar([position+0.75 for position in positions],weighted_most_beats2,width = 0.2,color = 'r')
+            c_axis.bar([position+0.5 for position in positions],weighted_avg_beats2,width = 0.2, color = 'orange')
+            x_ticks = [0.34,1.88,3.42]
+            c_axis.set_xticks(x_ticks)
+            c_axis.set_xticklabels(enemy_list,fontsize = 7.5)
+            c_axis.set_title(f"{observer}",fontsize = 10)
+            colors = ['c','orange']
+            handles = [plt.Rectangle((0,0),1,1, color=color) for color in colors]
+            c_axis.legend(handles,["vs3", "vs2"],loc = 'upper right')
+            #c_axis.set_ylim
+        #plt.suptitle("'Average blocks'/'Turns to Finish")
+        #plt.savefig(self.path_plot_dir.joinpath("plots/block_by_turns.png"),dpi = fig.dpi)
+        plt.show()
 
     def extract_data_vs3_vs2(self,observer: str,subdata: pd.DataFrame, enemy_list : list, column : str)-> tuple:
         # function extracts data for every opponent strategy for a given observer. extracts the given column in the dataframe for the given data.
@@ -79,11 +148,9 @@ class Harry_Plotter():
         #                                           first, pref_bl, pref_bl, pref_bl .......
         vs3 = []
         vs2 = []
-        counted_enemy = []
         for enemy in enemy_list:
             vs3.append([strat for strat in subdata["Strategies"].tolist() if strat.count(enemy)==3][0])   
             vs2.append([strat for strat in subdata["Strategies"].tolist() if strat.count(enemy)==2][0])
-            counted_enemy.append(enemy)
         v3_extracted_data = [subdata.loc[subdata['Strategies'] == strat].reset_index().at[0,column] for strat in vs3]
         v2_extracted_data = [subdata.loc[subdata['Strategies'] == strat].reset_index().at[0,column] for strat in vs2]
 
@@ -108,5 +175,6 @@ if __name__ == "__main__" :
     # plot winrate vs 3/2x Strat a  --> 4x3x2 Balken DONE
     # kicks/max kicks in relation zu Turns to Finish 
     # blocks / max blocks in relation tu Turns to finish
-    col_names = ["Strategies","Winrate","Average Placement","Average Turns per Game", "Turns to Finish","Average Blocks Created","Average Kicks",
-                          "Average got Kicked","Game most Kicks","Game most Blocks","Game most got Kicked"]
+    col_names = ["Strategies","Winrate","Average Placement","Average Turns per Game", 
+                "Turns to Finish","Average Blocks Created","Average Kicks",
+                "Average got Kicked","Game most Kicks","Game most Blocks","Game most got Kicked"]
