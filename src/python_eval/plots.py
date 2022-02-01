@@ -7,7 +7,6 @@ import os
 from copy import deepcopy 
 from pathlib import Path
 
-from sympy import E
 
 
 
@@ -37,44 +36,59 @@ class Harry_Plotter():
         return df_observed
 
     def create_plots(self,):
-        for obs in self.observer_sim_dic.keys(): 
-            df_by_obs = self.observer_sim_dic.get(obs)
-            self.plot_winrate(df_by_obs,obs)
-    def plot_winrate(self,data : pd.DataFrame,observer : str):
-        subdata = data[["Strategies", "Winrate"]]
-        enemy_list = deepcopy(self.strategies)
-        enemy_list.remove(observer)
-        positions = [0,1.25,2.5]
+       self.plot_winrate()
+    # self.plot_blocks_by_avg_turns(obs)
+    
+    def plot_winrate(self):
+        fig,ax = plt.subplots(nrows= 2 ,ncols = 2,figsize = (6,7.5))
+        for i,observer in enumerate(self.observer_sim_dic.keys()):
+            x_axis = 0
+            if i>1 : x_axis = 1
+            y_axis =i%2
+            c_axis = ax[x_axis][y_axis]
+            subdata = self.observer_sim_dic.get(observer)
+            enemy_list = deepcopy(self.strategies)
+            enemy_list.remove(observer)
+            positions = [0,1.25,2.5]
+            v3_winrates,v2_winrates = self.extract_data_vs3_vs2(observer, subdata, enemy_list,"Winrate")
+            c_axis.bar(positions,v3_winrates,width = 0.4, color = 'b')
+            c_axis.bar([position+0.5 for position in positions],v2_winrates,width=0.4,color = 'r')
+            ticks_positions = [position+0.25 for position in positions]
+            c_axis.set_xticks(ticks_positions)
+            c_axis.set_xticklabels(enemy_list,fontsize = 7.5)
+            c_axis.set_ylim((0,0.75))
+            c_axis.set_title(f"Winrates by {observer}",fontsize = 10)
+            colors = ['blue','red']
+            handles = [plt.Rectangle((0,0),1,1, color=color) for color in colors]
+            c_axis.legend(handles,["vs3", "vs2"],loc = 'upper right')
+            c_axis.axhline(y = 0.25,color = '0.75')
+            plt.savefig(self.path_plot_dir.joinpath("plots/winrate_plot.png"),dpi = fig.dpi)
+    def plot_blocks_by_avg_turns():
+        pass
+    def plot_beats_by_avg_turns():
+        pass
+    def plots_got_kicked_by_avg_turns():
+        pass
+    def __by_avg_turns__():
+        pass
+
+    def extract_data_vs3_vs2(self,observer: str,subdata: pd.DataFrame, enemy_list : list, column : str)-> tuple:
+        # function extracts data for every opponent strategy for a given observer. extracts the given column in the dataframe for the given data.
+        # extracts a tuple of all records in which any strategy occurs with 2 and 3 players employing it.
+        # example : observer : first -> extracts  : first, last, last, last  , first, last, last ,any
+        #                                           first, pref_bl, pref_bl, pref_bl .......
         vs3 = []
         vs2 = []
-        for enemy in enemy_list: 
+        counted_enemy = []
+        for enemy in enemy_list:
             vs3.append([strat for strat in subdata["Strategies"].tolist() if strat.count(enemy)==3][0])   
             vs2.append([strat for strat in subdata["Strategies"].tolist() if strat.count(enemy)==2][0])
-        v3_winrates = [subdata.loc[subdata['Strategies'] == strat].reset_index().at[0,"Winrate"] for strat in vs3]
-        v2_winrates = [subdata.loc[subdata['Strategies'] == strat].reset_index().at[0,"Winrate"] for strat in vs2]
-        fig = plt.figure(figsize = (5,6))
-        plt.bar(positions,v3_winrates,width = 0.4, color = 'b')
-        plt.bar([position+0.5 for position in positions],v2_winrates,width=0.4,color = 'r')
-        ticks_positions = [position+0.25 for position in positions]
-        plt.xticks(ticks_positions,enemy_list)
-        plt.ylim((0,0.75))
-        plt.title(f"Winrates by {observer}")
-        colors = ['blue','red']
-        handles = [plt.Rectangle((0,0),1,1, color=color) for color in colors]
-        plt.legend(handles,["vs3", "vs2"],loc = 'upper right')
-            #v2_winrate =
-        plt.show()
+            counted_enemy.append(enemy)
+        v3_extracted_data = [subdata.loc[subdata['Strategies'] == strat].reset_index().at[0,column] for strat in vs3]
+        v2_extracted_data = [subdata.loc[subdata['Strategies'] == strat].reset_index().at[0,column] for strat in vs2]
 
-    def count_strats(self,strat_comp,to_count):
+        return v3_extracted_data,v2_extracted_data
         
-        print(to_count)
-        print(strat_comp.count(to_count))
-
-
-
-        #plt.bar(positions, vs3)
-        #print(subdata)
-
 
     def __is_observer__(self,strat_comp : str, observer : str)-> bool:
         row_obs =  strat_comp.split(sep = ",")[0]
@@ -92,6 +106,7 @@ if __name__ == "__main__" :
     plotter = Harry_Plotter(file)
     # TODO sinnvolle Plots #
     # plot winrate vs 3/2x Strat a  --> 4x3x2 Balken DONE
-    # kicks& blocks / round statt avg turns per game 
-    col_names = ["Strategies","Winrate","Average" ,"Placement","Average Turns per Game", "Turns to Finish","Average Blocks Created","Average Kicks",
+    # kicks/max kicks in relation zu Turns to Finish 
+    # blocks / max blocks in relation tu Turns to finish
+    col_names = ["Strategies","Winrate","Average Placement","Average Turns per Game", "Turns to Finish","Average Blocks Created","Average Kicks",
                           "Average got Kicked","Game most Kicks","Game most Blocks","Game most got Kicked"]
