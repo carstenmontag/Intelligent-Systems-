@@ -90,14 +90,13 @@ class Harry_Plotter():
             c_axis.bar(positions,weighted_avg_blocks3,width = 0.4,color = 'royalblue')
             c_axis.bar([position+0.5 for position in positions],weighted_avg_blocks2,width = 0.4, color = 'lightskyblue')
             x_ticks = [0.34,1.88,3.42]
-            c_axis.set_ylim((0,0.09))
+            c_axis.set_ylim((0,0.15))
             c_axis.set_xticks(x_ticks)
             c_axis.set_xticklabels(enemy_list,fontsize = 7.5)
             c_axis.set_title(f"{observer}",fontsize = 10)
             colors = ['royalblue','lightskyblue']
             handles = [plt.Rectangle((0,0),1,1, color=color) for color in colors]
             c_axis.legend(handles,["vs3", "vs2"],loc = 'upper right')
-            #c_axis.set_ylim
         plt.suptitle("Turns creating blocks in %")
         plt.savefig(self.path_plot_dir.joinpath("plots/block_by_turns.png"),dpi = fig.dpi)
 
@@ -162,7 +161,7 @@ class Harry_Plotter():
     
 
 if __name__ == "__main__" :    
-    file = "results_2000_runs.csv"
+    file = "2022.02.03.02.43.33.csv"
     plotter = Harry_Plotter(file)
     # TODO sinnvolle Plots #
     # plot winrate vs 3/2x Strat a  --> 4x3x2 Balken DONE

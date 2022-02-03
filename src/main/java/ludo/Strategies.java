@@ -34,7 +34,7 @@ public class Strategies {
                 return 1;
             } else {
                 // die oben beschriebene Logik wird durch diese Utility Funktion ausgeführt.
-                return Boolean.compare(beatsm2, beatsm1);
+                return Boolean.compare(beatsm1, beatsm2);
             }
         }   
     }
@@ -81,10 +81,10 @@ public class Strategies {
 
             if ((!m1.piece.blocks && m1.canBlock && !m2.piece.blocks && !m2.canBlock) || (!m1.piece.blocks && m1.canBlock && m2.piece.blocks && !m2.canBlock)
                     || (!m1.piece.blocks && m1.canBlock && m2.piece.blocks && m2.canBlock) || (!m1.piece.blocks && !m1.canBlock && m2.piece.blocks && !m2.canBlock)
-                    || (m1.piece.blocks && m1.canBlock && m2.piece.blocks && !m2.canBlock)) {return -1;}
+                    || (m1.piece.blocks && m1.canBlock && m2.piece.blocks && !m2.canBlock)) {return 1;}
             else if ((!m1.piece.blocks && !m1.canBlock && !m2.piece.blocks && m2.canBlock) || (m1.piece.blocks && !m1.canBlock && !m2.piece.blocks && !m2.canBlock)
                     || (m1.piece.blocks && !m1.canBlock && !m2.piece.blocks && m2.canBlock) || (m1.piece.blocks && !m1.canBlock && m2.piece.blocks && m2.canBlock)
-                    || (m1.piece.blocks && m1.canBlock && !m2.piece.blocks && m2.canBlock)) {return 1;}
+                    || (m1.piece.blocks && m1.canBlock && !m2.piece.blocks && m2.canBlock)) {return -1;}
             else return 0;
         }
     }

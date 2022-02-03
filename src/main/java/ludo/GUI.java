@@ -34,7 +34,7 @@ public class GUI extends GUIState {
     // Wie viele Spiele wurden insgesamt gepsielt
     public int num_of_games = 1;
 
-    public static int games_per_comb = 100; // Gibt an wie viele Spiele per Kombination gespielt werden
+    public static int games_per_comb = 2000; // Gibt an wie viele Spiele per Kombination gespielt werden
     public int game_in_comb = 0; // Gibt an wie viele Spiele in der aktuellen Kombination gespielt wurden
     public int current_comb = 1; // Gibt aktuelle Kombination an
     public int counter_game_moves = 0; // Gibt an wie viele Moves das aktuelle Game hat.
