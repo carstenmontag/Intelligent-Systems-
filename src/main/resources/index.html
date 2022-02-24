@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html lang="en">
+<head>
+    <title>Ludo Board Game</title>
+</head>
+<body>
+
+<table border=0 cellspacing=0 cellpadding=6>
+    <tr>
+        <td valign=top>
+            <img src="icon.png" width="50" height="50" alt="dice_icon">
+        <td valign=top>
+            <h2>Intelligent Systems: Assignment 1</h2>
+            <b>Agent-based Simulation of the Board Game Ludo</b>
+</table>
+
+<p>
+    This simulation is an agent-based implementation of the english board game Ludo and will be played with 4 players.
+    You can read the rules of the game under the following link: https://www.ymimports.com/pages/how-to-play-ludo.
+<p>
+    The simulation evaluates the performance of the player called "Observed" and writes the calculated results into a .csv file.
+    The simulation has 4 strategies to change the behavior of the players.
+    28 combinations of those strategies will be run a set number of times, to generate data for calculation.
+<p>
+    Strategies:
+<ul>
+    <li>
+        First: Prioritises the game piece, that is closest to the goal.
+    </li>
+    <li>
+        Last: Prioritises the game piece, that is furthest from the goal.
+    </li>
+    <li>
+        Prefer_Block: Tries to make and maintain as many blocks as possible.
+    </li>
+    <li>
+        Prefer_Beat: Tries to beat others players as often as possible.
+    </li>
+</ul>
+
+</body>
+</html>
